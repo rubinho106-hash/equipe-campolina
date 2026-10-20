@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<script src="campolina-config.js"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Campolina • Apontador</title>
+<meta name="theme-color" content="#0b1330">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f2f4f9;--surface:#ffffff;--surface-2:#f8f9fc;--ink:#151b2c;--muted:#626e88;--line:#e2e6f0;
+  --accent:#2451d6;--accent-ink:#ffffff;
+  --hero-1:#0b1330;--hero-2:#1c3fb8;
+  --good-bg:#dcf3e6;--good-ink:#157a4a;
+  --warn-bg:#fbe6d4;--warn-ink:#a85417;
+  --danger-ink:#b3261e;
+  --shadow:0 1px 2px rgba(20,26,50,.04), 0 8px 24px rgba(20,26,50,.06);
+  --radius:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:auto;padding:16px 14px 40px}
+
+.hero{
+  background:linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 130%);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  color:#f5f7ff;
+}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#a9bdfb;margin-bottom:8px}
+.hero h1{margin:0;font-size:24px;font-weight:800;color:#fff}
+.hero-sub{font-size:13px;color:#cbd5f7;margin-top:6px}
+.hero-clock{font-size:32px;font-weight:700;color:#fff;margin-top:10px;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.hero-clock-nota{font-size:12.5px;color:#cbd5f7;margin-top:2px}
+.install-row{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;min-height:20px}
+.install-btn{background:#fff;color:var(--hero-2);border:0;border-radius:9px;padding:9px 14px;font-weight:700;font-size:12.5px;cursor:pointer}
+.install-status{font-size:11.5px;color:#cbd5f7}
+.login-status-row{margin-top:12px;display:flex;gap:10px;align-items:center;font-size:12.5px;color:#cbd5f7}
+.sair-btn{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:8px;padding:6px 12px;font-size:11.5px;font-weight:700;cursor:pointer}
+.erro-login{margin-top:12px;padding:10px 12px;border-radius:9px;background:rgba(179,38,30,.1);color:var(--danger-ink);font-size:13px;font-weight:600}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:14px;box-shadow:var(--shadow)}
+label{display:block;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin:8px 0 6px}
+select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);font:inherit;font-size:15px}
+/* Data sempre automática (hoje), sem calendário pra escolher outro dia --
+   pedido do Rubens: "excluir calendario, deixar data automatica". */
+#data{background:var(--surface-2);color:var(--muted);cursor:default}
+#data::-webkit-calendar-picker-indicator{display:none}
+select:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+button{font:inherit;border:0;border-radius:9px;padding:11px 14px;font-weight:700;font-size:13.5px;color:#fff;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+.primary{background:var(--accent)}
+.success{background:var(--good-ink)}
+.danger{background:var(--danger-ink)}
+.secondary{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+
+.emp-list{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.grupo-titulo{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:16px 2px 0}
+.emp{display:flex;align-items:center;gap:12px;width:100%;border:0;border-bottom:1px solid var(--line);background:var(--surface);color:var(--ink);padding:13px 14px;font-size:15px;text-align:left;cursor:pointer}
+.emp:last-child{border-bottom:0}
+.emp:hover:not(:disabled){background:var(--surface-2)}
+.emp-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
+.emp-name{min-width:0;flex:1;font-weight:600}
+
+.status{font-size:11px;font-weight:700;letter-spacing:.02em;white-space:nowrap;padding:6px 12px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.status.full{color:var(--good-ink);background:var(--good-bg)}
+.status.half{color:var(--warn-ink);background:var(--warn-bg)}
+.status.absent{color:var(--danger-ink);background:rgba(179,38,30,.12)}
+
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.sum{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;cursor:pointer;font:inherit;color:inherit;width:100%}
+.sum.active{border-color:var(--accent);background:#eaf0ff}
+.sum b{display:block;font-size:19px;color:var(--ink)}
+.sum span{font-size:10.5px;color:var(--muted);letter-spacing:.02em;text-transform:uppercase}
+
+.notice{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);font-size:13px}
+.notice b{color:var(--ink)}
+
+.lock-card{text-align:center;padding:40px 20px}
+.lock-date{color:var(--muted);font-size:15px}
+.lock-clock{font-size:52px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.01em;margin-top:8px}
+.lock-msg{color:var(--muted);font-size:13px;margin-top:18px}
+
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:100}
+.modal{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 20px 50px rgba(15,23,42,.25)}
+.modal h3{margin:0 0 2px;font-size:18px;color:var(--ink)}
+.modal .sub{color:var(--muted);font-size:12.5px}
+.choices{display:grid;gap:8px;margin-top:14px}
+.choice{border:0;border-radius:10px;padding:14px;font-size:14.5px;font-weight:700;color:#fff}
+.fullbtn{background:var(--good-ink)}
+.halfbtn{background:var(--warn-ink)}
+.absentbtn{background:var(--danger-ink)}
+.cancelbtn{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.clearbtn{background:var(--surface);color:var(--danger-ink);border:1px solid var(--danger-ink)}
+.horas-extras-row{margin-top:2px;padding-top:12px;border-top:1px solid var(--line)}
+.horas-extras-row label{display:block;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;margin-bottom:6px}
+.horas-extras-linha{display:flex;gap:8px}
+.horas-extras-linha input{flex:1;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);font:inherit;font-size:15px}
+.horas-extras-linha input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.horasbtn{background:var(--accent);flex-shrink:0;padding:0 16px;font-size:13px}
+
+.closed-banner{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--warn-bg);border:1px solid #f0c49a;color:var(--warn-ink);font-size:13px;font-weight:600}
+
+@media(max-width:620px){
+  .grid{grid-template-columns:1fr}
+  .summary{grid-template-columns:repeat(2,1fr)}
+  .emp{font-size:15.5px;padding:15px 14px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-eyebrow">GESTÃO DE PONTO · CAMPOLINA</div>
+    <h1>Apontador</h1>
+    <div class="hero-sub">Lançamento rápido por obra e exceções</div>
+    <div class="hero-clock" id="heroRelogio">🕒 --:--</div>
+    <div class="hero-clock-nota" id="heroRelogioNota" style="display:none">Abre às 07:00</div>
+    <div class="install-row">
+      <button class="install-btn" id="btnInstalar" style="display:none">⬇ Instalar app</button>
+      <span class="install-status" id="statusInstalar"></span>
+    </div>
+    <div class="login-status-row" id="loginStatusRow" style="display:none">
+      <span id="nomeLogado"></span>
+      <button class="sair-btn" id="btnSair" type="button">Sair</button>
+    </div>
+  </div>
+
+  <div class="card" id="telaLogin">
+    <label for="loginUsuario">Usuário</label>
+    <input id="loginUsuario" type="text" placeholder="ex: weslen" autocomplete="username">
+    <label for="loginSenha">Senha</label>
+    <input id="loginSenha" type="password" placeholder="Senha" autocomplete="current-password">
+    <div class="erro-login" id="loginErro" style="display:none"></div>
+    <button class="primary" id="btnLoginEntrar" style="margin-top:14px;width:100%">Entrar</button>
+  </div>
+
+  <div id="appConteudo" style="display:none">
+  <div class="card lock-card" id="cardTravado" style="display:none">
+    <div class="lock-date" id="travadoData">--</div>
+    <div class="lock-clock" id="travadoRelogio">--:--:--</div>
+    <div class="lock-msg">Lançamento disponível das 07h às 18h59.</div>
+  </div>
+
+  <div class="card" id="cardPrincipal">
+    <div class="grid">
+      <div>
+        <label>Obra</label>
+        <select id="obra"></select>
+      </div>
+      <div>
+        <label>Data</label>
+        <input id="data" type="date" readonly>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px">
+      <button id="todosDia" class="success">✓ Preencher não lançados — Dia inteiro</button>
+      <span id="count" class="status">0 funcionários</span>
+    </div>
+    <div id="statusSalvar" style="display:none;margin-top:8px;font-size:12.5px;font-weight:700"></div>
+
+    <div id="fechadoBanner" class="closed-banner" style="display:none">Dia fechado. Os lançamentos ficam bloqueados por aqui — qualquer correção precisa ser feita no painel principal.</div>
+
+    <div style="margin-top:12px">
+      <input id="buscaFunc" type="text" placeholder="🔍 Buscar funcionário...">
+    </div>
+
+    <div id="funcionarios">
+      <div style="padding:16px;color:var(--muted)">Carregando equipe…</div>
+    </div>
+
+    <div class="summary">
+      <button type="button" class="sum" id="sumFull" data-cls="full"><b id="sFull">0</b><span>Inteiros</span></button>
+      <button type="button" class="sum" id="sumHalf" data-cls="half"><b id="sHalf">0</b><span>Meio período</span></button>
+      <button type="button" class="sum" id="sumAbsent" data-cls="absent"><b id="sAbsent">0</b><span>Faltas</span></button>
+      <button type="button" class="sum" id="sumPending" data-cls="pending"><b id="sPending">0</b><span>Pendentes</span></button>
+    </div>
+    <div id="resumoNomes" style="display:none;margin-top:10px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;font-size:13px"></div>
+
+    <div class="notice">
+      <b>Total equivalente:</b> <span id="totalDiarias">0</span> diária(s)
+    </div>
+
+    <div class="row" style="margin-top:14px">
+      <button id="fecharDia" class="success" disabled>Fechar dia</button>
+      <button id="limparDia" class="danger">Limpar lançamentos</button>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNome">
+    <h3 id="modalNome">Funcionário</h3>
+    <div class="sub" id="modalSub">Selecione a situação</div>
+    <div class="choices" id="choicesView">
+      <button class="choice fullbtn" data-status="full">Dia inteiro • 1 diária</button>
+      <button class="choice halfbtn" data-status="morning">Manhã • 0,5 diária</button>
+      <button class="choice halfbtn" data-status="afternoon">Tarde • 0,5 diária</button>
+      <button class="choice absentbtn" data-status="absent">Falta • 0</button>
+      <button class="choice clearbtn" data-status="clear" id="opcaoLimpar" style="display:none">🗑 Limpar lançamento</button>
+      <div class="horas-extras-row">
+        <label for="inputHorasExtras">Horas extras (opcional)</label>
+        <div class="horas-extras-linha">
+          <input type="number" id="inputHorasExtras" min="0" step="0.5" placeholder="0">
+          <button type="button" class="choice horasbtn" id="btnSalvarHoras">Salvar horas</button>
+        </div>
+      </div>
+      <button class="choice cancelbtn" id="cancelar">Cancelar</button>
+    </div>
+    <div class="choices" id="confirmarView" style="display:none">
+      <button class="choice fullbtn" id="btnConfirmar">Confirmar</button>
+      <button class="choice cancelbtn" id="btnVoltar">Voltar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="confirmGeralBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmGeralTitulo">
+    <h3 id="confirmGeralTitulo">Confirmar</h3>
+    <div class="sub" id="confirmGeralTexto" style="white-space:pre-line">Tem certeza?</div>
+    <div class="choices">
+      <button class="choice absentbtn" id="confirmGeralOk">Confirmar</button>
+      <button class="choice cancelbtn" id="confirmGeralCancelar">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+// ---------------- Firebase (mesmo projeto do index.html/cartoes.html) ----------------
+const firebaseConfig = window.CAMPOLINA_FIREBASE_CONFIG;
+validarConfiguracaoCampolina(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+// ---------------- Login (Fase 2 da análise de confiabilidade) ----------------
+// Cada apontador tem 1 conta (não mais um link aberto pra qualquer um) --
+// "usuário" (sem precisar digitar e-mail) é mapeado internamente pra
+// usuario@campolina-login.local, já que o provedor Email/Senha do Firebase
+// Auth exige um identificador em formato de e-mail. Aceita também um
+// e-mail completo já digitado (contas criadas fora do padrão combinado).
+// O vínculo de qual funcionário/obras cada conta enxerga fica em
+// usuarios/{uid} (role:"admin"|"apontador", funcionarioId pro apontador) --
+// as regras do Firestore continuam abertas por enquanto (só a interface
+// trava; ver CLAUDE.md pra próximos passos).
+const DOMINIO_LOGIN = "campolina-login.local";
+function emailDoUsuario(usuario){
+  const limpo = usuario.trim().toLowerCase();
+  if(limpo.includes("@")) return limpo;
+  return limpo.replace(/\s+/g, "") + "@" + DOMINIO_LOGIN;
+}
+let perfilAtual = null;   // { role, funcionarioId?, nome } -- de usuarios/{uid}
+let obrasPermitidas = null; // array de nomes de obra, ou null = ve todas (admin)
+
+function mostrarErroLogin(msg){
+  const el = document.getElementById("loginErro");
+  el.textContent = msg;
+  el.style.display = "block";
+}
+function limparErroLogin(){
+  document.getElementById("loginErro").style.display = "none";
+}
+const MENSAGENS_ERRO_LOGIN = {
+  "auth/invalid-credential": "Usuário ou senha incorretos.",
+  "auth/user-not-found": "Usuário não encontrado.",
+  "auth/wrong-password": "Senha incorreta.",
+  "auth/too-many-requests": "Muitas tentativas — espera um pouco e tenta de novo.",
+  "auth/invalid-email": "Usuário inválido.",
+  "auth/network-request-failed": "Sem conexão — verifica a internet e tenta de novo.",
+  "auth/configuration-not-found": "Login ainda não está configurado. Fala com o administrador."
+};
+async function tentarEntrar(){
+  limparErroLogin();
+  const usuario = document.getElementById("loginUsuario").value.trim();
+  const senha = document.getElementById("loginSenha").value;
+  if(!usuario || !senha){ mostrarErroLogin("Preencha usuário e senha."); return; }
+  const btn = document.getElementById("btnLoginEntrar");
+  btn.disabled = true; btn.textContent = "Entrando…";
+  try {
+    await auth.signInWithEmailAndPassword(emailDoUsuario(usuario), senha);
+  } catch(e){
+    mostrarErroLogin(MENSAGENS_ERRO_LOGIN[e.code] || "Não deu pra entrar — tenta de novo.");
+  } finally {
+    btn.disabled = false; btn.textContent = "Entrar";
+  }
+}
+document.getElementById("btnLoginEntrar").addEventListener("click", tentarEntrar);
+document.getElementById("loginSenha").addEventListener("keydown", e => { if(e.key==="Enter") tentarEntrar(); });
+document.getElementById("loginUsuario").addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("loginSenha").focus(); });
+document.getElementById("btnSair").addEventListener("click", () => auth.signOut());
+
+async function carregarPerfil(uid){
+  const snap = await db.doc("usuarios/" + uid).get();
+  if(!snap.exists) return null;
+  return snap.data();
+}
+async function obrasDoApontador(funcionarioId){
+  const snap = await db.collection("obras").where("apontadorId", "==", funcionarioId).get();
+  return snap.docs.map(d => d.data().nome);
+}
+
+auth.onAuthStateChanged(async (user) => {
+  const telaLogin = document.getElementById("telaLogin");
+  const appConteudo = document.getElementById("appConteudo");
+  if(!user){
+    perfilAtual = null; obrasPermitidas = null;
+    telaLogin.style.display = "block";
+    appConteudo.style.display = "none";
+    document.getElementById("loginStatusRow").style.display = "none";
+    document.getElementById("loginSenha").value = "";
+    return;
+  }
+
+  perfilAtual = await carregarPerfil(user.uid);
+  if(!perfilAtual){
+    telaLogin.style.display = "block";
+    appConteudo.style.display = "none";
+    mostrarErroLogin("Essa conta não tem perfil configurado. Fala com o administrador.");
+    await auth.signOut();
+    return;
+  }
+
+  obrasPermitidas = perfilAtual.role === "apontador"
+    ? await obrasDoApontador(perfilAtual.funcionarioId)
+    : null; // admin ve todas
+
+  document.getElementById("nomeLogado").textContent = perfilAtual.nome || user.email;
+  document.getElementById("loginStatusRow").style.display = "flex";
+  telaLogin.style.display = "none";
+  appConteudo.style.display = "block";
+  iniciarDados();
+});
+
+// PASSO 5 do roadmap (04/09/2026): os lançamentos deixam de ir pro
+// localStorage e passam a gravar direto em
+// funcionarios/{funcId}/pontos/{AAAA-MM} -- o MESMO documento que o
+// cartão do admin (index.html) e a tela Apontamentos leem/escrevem. Um
+// lançamento feito aqui já aparece nos dois assim que salva. O modelo de
+// dado muda de "um registro por funcionário+obra+data" (localStorage) pra
+// "um dia com m/t" compartilhado entre obras -- por isso as regras de
+// conflito e a antiga função complementar() saem: com dado real, marcar
+// manhã numa obra e tarde noutra já É complementar por natureza (cada
+// período grava sua própria obra, sem precisar de lógica extra pra
+// permitir isso). "Fechar dia" foi pro Firestore no Passo 7
+// (fechamentosDia/{obra_data}) -- e não existe mais "Reabrir dia": uma
+// vez fechado por aqui, a única forma de corrigir é pelo painel
+// principal (index.html), que edita livre independente do fechamento.
+
+// Mesma lógica de corAvatar()/iniciais() do site principal -- paleta
+// idêntica, então o mesmo funcionário cai na mesma cor em todo canto.
+const AVATAR_COLORS = ["#2451d6","#157a4a","#a85417","#7c3aed","#0f766e","#be185d","#4338ca","#b45309"];
+function corAvatar(nome){
+  let h = 0;
+  for(let i = 0; i < nome.length; i++) h = (h * 31 + nome.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function iniciais(nome){
+  const partes = nome.trim().split(/\s+/);
+  const a = partes[0] ? partes[0][0] : "";
+  const b = partes.length > 1 ? partes[partes.length - 1][0] : "";
+  return (a + b).toUpperCase();
+}
+
+// Mesmo conceito de marcador do index.html/cartoes.html -- SÁBADO/DOMINGO/
+// FERIADO/FALTA não são obra, então nunca contam como trabalho real.
+const MARCADORES = ["SÁBADO", "DOMINGO", "FERIADO", "FALTA"];
+function ehMarcador(v){ return MARCADORES.includes(v); }
+
+// O banco não tem regras/validação (qualquer um com o link escreve) --
+// nome de funcionário entra direto em innerHTML em alguns lugares, então
+// precisa ser escapado antes, ou um nome com "<"/">" vira HTML de verdade
+// pra quem estiver olhando a lista.
+function escapeHtml(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+const obra=document.getElementById("obra");
+const data=document.getElementById("data");
+const lista=document.getElementById("funcionarios");
+const backdrop=document.getElementById("backdrop");
+const modalNome=document.getElementById("modalNome");
+let atual=null; // funcionário (objeto {id, nome, ...}) com o modal aberto
+
+let OBRAS = [];
+let todos = []; // funcionários Ativos, [{id, nome, funcao, status, ...}]
+let dadosMes = {}; // funcId -> { dias: {...} } do mes atualmente carregado
+let mesCarregado = null; // "AAAA-MM" -- qual mes esta em dadosMes agora
+let fechadoAtual = false; // se a combinacao obra+data selecionada agora esta fechada
+let filtroResumo = null; // "full"|"half"|"absent"|"pending"|null -- card do resumo clicado
+
+function mesDaData(){ return data.value.slice(0,7); }
+function diaDaData(){ return Number(data.value.split("-")[2]); }
+
+async function carregarDadosMes(mes){
+  mesCarregado = mes;
+  await Promise.all(todos.map(async f => {
+    const snap = await db.doc("funcionarios/" + f.id + "/pontos/" + mes).get();
+    dadosMes[f.id] = snap.exists ? snap.data() : { dias: {} };
+  }));
+}
+
+// Igual garantirDocPontos() do index.html -- cria o doc do mes pre-
+// preenchido com SABADO/DOMINGO se ainda nao existir, mantendo o mesmo
+// formato que o resto do sistema espera (inclusive statusConferencia,
+// que a Conferencia de Ponto usa).
+async function garantirDocPontos(funcId, mes){
+  const ref = db.doc("funcionarios/" + funcId + "/pontos/" + mes);
+  const snap = await ref.get();
+  if(snap.exists) return ref;
+  const [anoNum, mesNum] = mes.split("-").map(Number);
+  const totalDias = new Date(anoNum, mesNum, 0).getDate();
+  const dias = {};
+  for(let dia = 1; dia <= totalDias; dia++){
+    const wd = new Date(anoNum, mesNum - 1, dia).getDay();
+    if(wd === 0) dias[dia] = { m: "DOMINGO", t: "DOMINGO" };
+    else if(wd === 6) dias[dia] = { m: "SÁBADO", t: "SÁBADO" };
+  }
+  await ref.set({ dias, statusConferencia: { q1: "Pendente", q2: "Pendente" } });
+  return ref;
+}
+
+// Achado da análise: uma falha de conexão aparecia igual a "nenhum dia
+// lançado" (cartão vazio), sem deixar claro que era erro. Agora mostra um
+// aviso explícito com botão pra tentar de novo, e cobre também as leituras
+// que rodavam fora do try (mês/fechamento), que antes travavam silenciosas.
+function mostrarErroCarregamento(){
+  lista.innerHTML = `<div style="padding:16px;text-align:center">
+    <div style="color:var(--danger-ink);margin-bottom:10px;font-weight:600">Não foi possível carregar os dados.</div>
+    <button class="secondary" id="btnTentarNovamente" type="button">Tentar novamente</button>
+  </div>`;
+  document.getElementById("btnTentarNovamente").addEventListener("click", iniciarDados);
+}
+
+async function iniciarDados(){
+  lista.innerHTML = '<div style="padding:16px;color:var(--muted)">Carregando equipe…</div>';
+  try {
+    const [obrasSnap, funcSnap] = await Promise.all([
+      db.collection("obras").orderBy("nome").get(),
+      db.collection("funcionarios").orderBy("nome").get()
+    ]);
+    OBRAS = obrasSnap.docs.map(d => d.data().nome);
+    // Apontador só vê a(s) obra(s) que ele é o responsável cadastrado
+    // (obrasPermitidas, calculado no login) -- admin (obrasPermitidas
+    // null) continua vendo todas, igual sempre foi.
+    if(obrasPermitidas) OBRAS = OBRAS.filter(o => obrasPermitidas.includes(o));
+    todos = funcSnap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(f => f.status !== "Inativo");
+
+    obra.innerHTML = "";
+    if(!OBRAS.length){
+      lista.innerHTML = '<div style="padding:16px;color:var(--muted)">Essa conta ainda não está associada a nenhuma obra. Fala com o administrador.</div>';
+      return;
+    }
+    OBRAS.forEach(o=>{
+      const op=document.createElement("option");
+      op.value=o;op.textContent=o;obra.appendChild(op);
+    });
+
+    await carregarDadosMes(mesDaData());
+    await carregarFechado();
+  } catch(e){
+    mostrarErroCarregamento();
+    return;
+  }
+  render();
+}
+
+function dataLocalHoje(){
+  const agora = new Date();
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, "0");
+  const dia = String(agora.getDate()).padStart(2, "0");
+  return `${ano}-${mes}-${dia}`;
+}
+data.value = dataLocalHoje();
+data.max = dataLocalHoje();
+
+// Janela de horário permitido pra lançamento -- pedido do Rubens: fora
+// desse intervalo (hora do proprio aparelho de quem esta usando, igual
+// dataLocalHoje()), o app fica so-leitura, mesmo com o dia ainda aberto.
+const HORARIO_INICIO = 7;  // inclusive
+const HORARIO_FIM = 19;    // exclusivo -- libera ate o fim das 18h (18:59:59), bloqueia as 19:00
+function dentroDoHorario(){
+  const h = new Date().getHours();
+  return h >= HORARIO_INICIO && h < HORARIO_FIM;
+}
+const DIAS_SEMANA = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+const MESES_ANO = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+function textoDataPorExtenso(){
+  const agora = new Date();
+  const dia = String(agora.getDate()).padStart(2, "0");
+  return `${DIAS_SEMANA[agora.getDay()]}, ${dia} de ${MESES_ANO[agora.getMonth()]}`;
+}
+function atualizarRelogio(){
+  const agora = new Date();
+  const hh = String(agora.getHours()).padStart(2, "0");
+  const mm = String(agora.getMinutes()).padStart(2, "0");
+  const ss = String(agora.getSeconds()).padStart(2, "0");
+  document.getElementById("heroRelogio").textContent = "🕒 " + hh + ":" + mm;
+  document.getElementById("heroRelogioNota").style.display = foraDoHorarioAgora() ? "block" : "none";
+  const relogioTravado = document.getElementById("travadoRelogio");
+  if(relogioTravado){
+    relogioTravado.textContent = `${hh}:${mm}:${ss}`;
+    document.getElementById("travadoData").textContent = textoDataPorExtenso();
+  }
+}
+atualizarRelogio();
+let horarioAnterior = dentroDoHorario();
+setInterval(() => {
+  atualizarRelogio();
+  const agora = dentroDoHorario();
+  if(agora !== horarioAnterior){
+    horarioAnterior = agora;
+    render();
+  }
+  // Data é sempre automática (hoje), sem calendário pra escolher outro dia
+  // -- se o app ficar aberto passando da meia-noite, avança sozinho pro
+  // dia seguinte, sem precisar recarregar a página.
+  const hojeReal = dataLocalHoje();
+  if(data.value !== hojeReal){
+    data.value = hojeReal;
+    data.max = hojeReal;
+    atualizarParaNovaData();
+  }
+}, 1000);
+
+// PASSO 7 do roadmap (04/09/2026): "Fechar dia" deixa de ser por mes (o
+// antigo fechamentos/{AAAA-MM}, ja removido do sistema) e tambem deixa de
+// ser so localStorage (como era ate aqui) -- agora e por Data+Obra,
+// gravado numa colecao nova e compartilhada,
+// fechamentosDia/{AAAA-MM-DD_OBRA}. Isso combina melhor com o jeito real
+// de trabalhar: cada obra fecha o dia dela quando termina de apontar,
+// independente das outras obras e sem depender do mes inteiro.
+function chaveFechamento(){ return data.value + "_" + obra.value; }
+async function carregarFechado(){
+  const snap = await db.doc("fechamentosDia/" + chaveFechamento()).get();
+  fechadoAtual = snap.exists && !!snap.data().fechado;
+}
+function isFechado(){ return fechadoAtual; }
+
+function diaDoFuncionario(funcId){
+  return ((dadosMes[funcId]||{}).dias||{})[diaDaData()] || {};
+}
+
+// Conferência (index.html) vira {q1,q2} independente do resto do ponto --
+// "Conferido" é um selo manual que não sabe sozinho quando o dado por
+// baixo mudou. Qualquer edição real de dia feita por aqui precisa
+// devolver a quinzena daquele dia pra "Pendente", senão o cartão fica
+// "aprovado" com dado desatualizado. Mesma lógica de statusQuinzena() do
+// index.html -- grava sempre o objeto {q1,q2} inteiro (nunca um dot-path
+// em cima de statusConferencia), já que um doc antigo pode ter esse campo
+// como string solta em vez de objeto.
+function quinzenaDoDia(dia){ return dia <= 15 ? 1 : 2; }
+function statusConferenciaAtual(info){
+  const sc = (info || {}).statusConferencia;
+  if(sc && typeof sc === "object"){
+    return { q1: sc.q1 === "Conferido" ? "Conferido" : "Pendente", q2: sc.q2 === "Conferido" ? "Conferido" : "Pendente" };
+  }
+  return { q1: sc === "Conferido" ? "Conferido" : "Pendente", q2: sc === "Conferido" ? "Conferido" : "Pendente" };
+}
+function invalidarConferenciaPatch(info, dia){
+  const patch = statusConferenciaAtual(info);
+  patch["q" + quinzenaDoDia(dia)] = "Pendente";
+  return patch;
+}
+// Conferência pelo funcionário (11/09/2026) -- mesmo mecanismo, só que quem
+// marca é o próprio funcionário (via cartoes.html), independente da
+// conferência administrativa acima. Mesma invalidação: editar qualquer dia
+// da quinzena devolve a concordância pra "Pendente" também.
+function concordanciaAtual(info){
+  const cc = (info || {}).concordanciaFuncionario;
+  if(cc && typeof cc === "object"){
+    return { q1: cc.q1 === "Concordou" ? "Concordou" : "Pendente", q2: cc.q2 === "Concordou" ? "Concordou" : "Pendente" };
+  }
+  return { q1: "Pendente", q2: "Pendente" };
+}
+function invalidarConcordanciaPatch(info, dia){
+  const patch = concordanciaAtual(info);
+  patch["q" + quinzenaDoDia(dia)] = "Pendente";
+  return patch;
+}
+// Status exibido é sempre relativo à obra selecionada no momento (mesmo
+// comportamento já testado nos passos anteriores) -- se a pessoa tiver um
+// lançamento real em OUTRA obra nesse dia, aqui aparece "Não lançado" (a
+// obra ainda não tem nada registrado dela), mas a checagem de conflito em
+// aplicarLancamento() enxerga esse valor e avisa antes de sobrescrever.
+// Falta é sempre dia inteiro (Modelo A) e aparece igual não importa qual
+// obra está selecionada, já que não é uma obra.
+function statusParaExibir(funcId){
+  const { m="", t="" } = diaDoFuncionario(funcId);
+  const mAqui = m === obra.value;
+  const tAqui = t === obra.value;
+  if(mAqui && tAqui) return {txt:"Dia inteiro • 1",cls:"full"};
+  if(mAqui) return {txt:"Manhã • 0,5",cls:"half"};
+  if(tAqui) return {txt:"Tarde • 0,5",cls:"half"};
+  // Falta agora pode ser só de um período (pedido do Rubens, 08/09/2026,
+  // revendo o "Modelo A" de 04/09) -- só conta como "Falta • 0" quando os
+  // DOIS períodos são falta. Falta em só um período, com o outro period
+  // sem nada a ver com esta obra (vazio ou outra obra), aparece "Não
+  // lançado" pra esta obra -- mesmo princípio já usado pra obra diferente
+  // (o que não é desta obra não é problema desta obra resolver).
+  if(m === "FALTA" && t === "FALTA") return {txt:"Falta • 0",cls:"absent"};
+  return {txt:"Não lançado",cls:"pending"};
+}
+function valorNestaObra(funcId){
+  const { m="", t="" } = diaDoFuncionario(funcId);
+  return (m===obra.value?0.5:0) + (t===obra.value?0.5:0);
+}
+function dataValidaParaLancamento(){
+  const hoje = dataLocalHoje();
+  if(data.value > hoje){
+    data.value = hoje;
+    alert("Não é permitido lançar ponto em data futura. A data foi ajustada para hoje.");
+    return false;
+  }
+  return true;
+}
+
+function montaLinhaFuncionario(f){
+  const st=statusParaExibir(f.id);
+  const b=document.createElement("button");
+  b.className="emp";b.type="button";b.disabled=isFechado()||salvando;
+  b.innerHTML=`<span class="emp-avatar" style="background:${corAvatar(f.nome)}">${escapeHtml(iniciais(f.nome))}</span>`
+    +`<span class="emp-name">${escapeHtml(f.nome)}</span><span class="status ${st.cls}">${escapeHtml(st.txt)}</span>`;
+  b.addEventListener("click",()=>abrir(f));
+  return b;
+}
+
+// "Equipe da obra" -- combina dois sinais, nenhum dos dois restringe quem
+// pode ser tocado (a busca sempre enxerga todo mundo em "outros"):
+// (1) ultimaObraNome/ultimaObraData -- ultimo lancamento real nessa obra,
+// gravado por qualquer um dos dois apps em aplicarLancamento()/salvarDia();
+// (2) obraPadrao -- cadastro manual feito no funcionario (index.html,
+// "Obra padrão"), pra quem ainda nao tem lancamento recente mas e esperado
+// ali por cadastro.
+// Quem tem lancamento real recente vem primeiro (mais recente no topo);
+// quem entrou so pelo cadastro manual vem depois, em ordem alfabetica.
+// Usada tanto pro agrupamento visual (render()) quanto pro escopo real do
+// "Marcar todos" (que so deve tocar quem esta cadastrado/ativo nessa obra
+// -- pra outra obra, o apontador busca o nome e marca individualmente).
+function equipeDaObra(lista){
+  return lista
+    .filter(f=>f.ultimaObraNome===obra.value || f.obraPadrao===obra.value)
+    .sort((a,b)=>{
+      const da=(a.ultimaObraNome===obra.value && a.ultimaObraData) || "";
+      const db=(b.ultimaObraNome===obra.value && b.ultimaObraData) || "";
+      if(da!==db) return db.localeCompare(da);
+      return (a.nome||"").localeCompare(b.nome||"");
+    });
+}
+
+// Admin não trava por horário em obra nenhuma (só o "dia fechado" continua
+// valendo pra ele, igual sempre foi) -- quem trava sempre fora do horário
+// é o apontador, mesmo que o dia já esteja fechado (pedido do Rubens
+// depois de comparar prints: antes "já fechado" liberava a tela normal
+// fora do horário pra qualquer perfil, o que ele não queria pro
+// apontador, só pro admin).
+function foraDoHorarioAgora(){
+  if(perfilAtual && perfilAtual.role === "admin") return false;
+  return !dentroDoHorario();
+}
+
+function render(){
+  // Fora do horário permitido: troca o card inteiro por uma "tela
+  // travada" com relógio grande, pedido do Rubens (print de referência) --
+  // nada do formulário fica visível ou é montado enquanto isso. Não se
+  // aplica ao admin (ver foraDoHorarioAgora acima).
+  const foraHorario = foraDoHorarioAgora();
+  document.getElementById("cardTravado").style.display = foraHorario ? "block" : "none";
+  document.getElementById("cardPrincipal").style.display = foraHorario ? "none" : "block";
+  if(foraHorario) return;
+
+  const termoBusca=(document.getElementById("buscaFunc").value||"").trim().toLowerCase();
+  // "equipe" (sem filtro de busca) e a base de tudo que e resumo/contagem
+  // dessa obra -- contador do topo, os 4 cards de status e o gate do
+  // "Fechar dia". Antes isso somava os 26 Ativos da empresa inteira,
+  // sempre mostrando "26 pendentes" mesmo numa obra com 4 cadastrados de
+  // verdade (nunca zerava, "Fechar dia" ficava preso pra sempre).
+  const equipe=equipeDaObra(todos);
+  document.getElementById("count").textContent=`${equipe.length} funcionário${equipe.length===1?"":"s"}`;
+
+  lista.innerHTML="";
+
+  if(!todos.length){
+    lista.innerHTML='<div style="padding:16px;color:var(--muted)">Nenhum funcionário ativo cadastrado.</div>';
+  } else {
+    const filtrados=termoBusca
+      ? todos.filter(f=>f.nome.toLowerCase().includes(termoBusca))
+      : todos;
+
+    if(!filtrados.length){
+      lista.innerHTML='<div style="padding:16px;color:var(--muted)">Nenhum funcionário encontrado.</div>';
+    } else {
+      const provavel=equipeDaObra(filtrados);
+      const provavelIds=new Set(provavel.map(f=>f.id));
+      const outros=filtrados.filter(f=>!provavelIds.has(f.id));
+
+      if(provavel.length){
+        const tituloProvavel=document.createElement("div");
+        tituloProvavel.className="grupo-titulo";
+        tituloProvavel.textContent="Equipe da obra";
+        lista.appendChild(tituloProvavel);
+
+        const listaProvavel=document.createElement("div");
+        listaProvavel.className="emp-list";
+        provavel.forEach(f=>listaProvavel.appendChild(montaLinhaFuncionario(f)));
+        lista.appendChild(listaProvavel);
+      }
+
+      // "Outros funcionários ativos" so aparece quando tem busca digitada --
+      // sem busca, a lista fica so na Equipe da obra (o Rubens achou a
+      // lista completa sempre visivel poluida). Ninguem fica inacessivel:
+      // digitar o nome de qualquer ativo encontra e deixa apontar normal.
+      if(termoBusca && outros.length){
+        const tituloOutros=document.createElement("div");
+        tituloOutros.className="grupo-titulo";
+        tituloOutros.textContent="Outros funcionários ativos";
+        lista.appendChild(tituloOutros);
+
+        const listaOutros=document.createElement("div");
+        listaOutros.className="emp-list";
+        outros.forEach(f=>listaOutros.appendChild(montaLinhaFuncionario(f)));
+        lista.appendChild(listaOutros);
+      }
+
+      if(!provavel.length && !termoBusca){
+        const dica=document.createElement("div");
+        dica.style.cssText="padding:16px;color:var(--muted)";
+        dica.textContent="Ninguém cadastrado nessa obra ainda. Busque pelo nome pra lançar alguém.";
+        lista.appendChild(dica);
+      }
+    }
+  }
+
+  // resumo/estatisticas sao sobre a equipe da obra (nao os 26 Ativos da
+  // empresa) -- a busca e so pra achar alguem na lista, nao e um filtro
+  // de relatorio, mas o relatorio em si agora e por obra, nao global.
+  let full=0, half=0, absent=0, pending=0, total=0;
+  const nomesPorCls = { full: [], half: [], absent: [], pending: [] };
+  equipe.forEach(f=>{
+    const st=statusParaExibir(f.id);
+    nomesPorCls[st.cls].push(f.nome);
+    if(st.cls==="full") full++;
+    else if(st.cls==="half") half++;
+    else if(st.cls==="absent") absent++;
+    else pending++;
+    total += valorNestaObra(f.id);
+  });
+
+  // Resumo clicável -- achado da análise: os 4 cards já mostravam a
+  // contagem, mas não dava pra ver quem estava em cada grupo sem procurar
+  // na lista inteira. Clicar num card mostra os nomes logo abaixo.
+  document.querySelectorAll(".sum").forEach(b => b.classList.toggle("active", b.dataset.cls === filtroResumo));
+  const resumoNomesEl = document.getElementById("resumoNomes");
+  if(filtroResumo){
+    const nomes = nomesPorCls[filtroResumo];
+    resumoNomesEl.style.display = "block";
+    resumoNomesEl.innerHTML = nomes.length
+      ? "<b>" + escapeHtml({full:"Inteiros",half:"Meio período",absent:"Faltas",pending:"Pendentes"}[filtroResumo]) + ":</b> " + nomes.map(escapeHtml).join(", ")
+      : "Ninguém nesse grupo.";
+  } else {
+    resumoNomesEl.style.display = "none";
+  }
+
+  document.getElementById("sFull").textContent=full;
+  document.getElementById("sHalf").textContent=half;
+  document.getElementById("sAbsent").textContent=absent;
+  document.getElementById("sPending").textContent=pending;
+  document.getElementById("totalDiarias").textContent=total.toLocaleString("pt-BR");
+
+  // Chegar até aqui já garante dentroDoHorario()===true (ver early return
+  // no topo de render()) -- só falta o gate de dia fechado.
+  const fechado=isFechado();
+  document.getElementById("fechadoBanner").style.display=fechado?"block":"none";
+  document.getElementById("todosDia").disabled=fechado||!equipe.length||salvando;
+  document.getElementById("limparDia").disabled=fechado||salvando;
+  document.getElementById("fecharDia").style.display=fechado?"none":"inline-block";
+  document.getElementById("fecharDia").disabled=pending>0||!equipe.length||salvando;
+}
+
+function abrir(f){
+  if(!dataValidaParaLancamento())return;
+  if(isFechado())return;
+  if(foraDoHorarioAgora())return;
+  if(salvando)return;
+  atual=f;modalNome.textContent=f.nome;
+  mostrarEscolhas();
+  // "Limpar lançamento" só faz sentido quando essa obra já tem algo
+  // lançado pra essa pessoa (manhã/tarde/dia inteiro nesta obra) -- Falta
+  // não pertence a obra nenhuma, então não tem o que limpar por aqui.
+  const st = statusParaExibir(f.id);
+  document.getElementById("opcaoLimpar").style.display = (st.cls==="full"||st.cls==="half") ? "block" : "none";
+  // Horas extras -- digitado à mão, independente do status do dia (a
+  // pessoa pode ter Dia inteiro/Manhã/Tarde/Falta E horas extras juntos).
+  // Pré-preenche com o valor já gravado pra esse dia, se tiver.
+  const horasAtual = diaDoFuncionario(f.id).horasExtras;
+  document.getElementById("inputHorasExtras").value = horasAtual ? horasAtual : "";
+  backdrop.style.display="flex";
+}
+function fecharModal(){atual=null;backdrop.style.display="none";mostrarEscolhas()}
+
+// Tela de confirmacao propria (nao confirm() nativo -- esse trava
+// silenciosamente em navegadores embutidos tipo WhatsApp/Instagram, mesmo
+// problema ja documentado no index.html). Toda escolha (mesmo sem
+// conflito nenhum) passa por aqui antes de gravar de verdade -- pedido do
+// Rubens depois de ver o quao facil e tocar no botao errado sem querer.
+const ROTULO_STATUS = {full:"Dia inteiro", morning:"Manhã", afternoon:"Tarde", absent:"Falta", clear:"Limpar lançamento"};
+let statusPendente = null;
+
+function mostrarEscolhas(){
+  statusPendente = null;
+  document.getElementById("choicesView").style.display="grid";
+  document.getElementById("confirmarView").style.display="none";
+  document.getElementById("modalSub").textContent="Selecione a situação";
+}
+function pedirConfirmacao(status){
+  if(!atual)return;
+  statusPendente = status;
+  document.getElementById("modalSub").textContent = `Confirma "${ROTULO_STATUS[status]}" pra ${atual.nome}?`;
+  document.getElementById("choicesView").style.display="none";
+  document.getElementById("confirmarView").style.display="grid";
+}
+
+// Modal de confirmacao generico, mesmo motivo do de cima -- usado por
+// "Fechar dia" e "Limpar lançamentos" no lugar do confirm() nativo.
+let confirmGeralResolver = null;
+function confirmarAcaoGeral(mensagem){
+  document.getElementById("confirmGeralTexto").textContent = mensagem;
+  document.getElementById("confirmGeralBackdrop").style.display = "flex";
+  return new Promise((resolve) => { confirmGeralResolver = resolve; });
+}
+function fecharConfirmacaoGeral(resultado){
+  document.getElementById("confirmGeralBackdrop").style.display = "none";
+  if(confirmGeralResolver){ confirmGeralResolver(resultado); confirmGeralResolver = null; }
+}
+document.getElementById("confirmGeralOk").addEventListener("click", () => fecharConfirmacaoGeral(true));
+document.getElementById("confirmGeralCancelar").addEventListener("click", () => fecharConfirmacaoGeral(false));
+
+// Estado "Salvando.../Salvo/Falha ao salvar" -- achado da análise: nenhum
+// botão travava durante a escrita, dava pra clicar duas vezes e disparar
+// escritas concorrentes na mesma pessoa. `salvando` também é lido por
+// render() pra desabilitar tudo que grava enquanto uma operação está em
+// andamento.
+let salvando = false;
+function statusSalvarEl(){ return document.getElementById("statusSalvar"); }
+function mostrarStatusSalvar(texto, cor){
+  const el = statusSalvarEl();
+  el.textContent = texto;
+  el.style.color = cor || "var(--muted)";
+  el.style.display = texto ? "block" : "none";
+}
+async function executarComSalvamento(fn){
+  if(salvando) return; // ignora clique duplicado enquanto uma escrita já está em andamento
+  salvando = true;
+  mostrarStatusSalvar("Salvando…");
+  render();
+  let falhou = false;
+  let resultado;
+  try {
+    resultado = await fn();
+    // fn() pode devolver false quando nada foi gravado de verdade (usuário
+    // cancelou um conflito, ou não havia nada pra limpar) -- nesse caso não
+    // faz sentido piscar "Salvo".
+    if(resultado === false) mostrarStatusSalvar("");
+    else mostrarStatusSalvar("Salvo ✓", "var(--good-ink)");
+  } catch(e){
+    falhou = true;
+    mostrarStatusSalvar("Falha ao salvar — tenta de novo", "var(--danger-ink)");
+  } finally {
+    salvando = false;
+    render();
+  }
+  if(!falhou && resultado !== false) setTimeout(() => mostrarStatusSalvar(""), 2000);
+}
+
+// Grava a cache de "ultima obra" (mesma logica do salvarDia() no
+// index.html) -- so quando o resultado final e uma obra real, nunca pra
+// falta. Fire-and-forget pro Firestore (se falhar, nao deve travar o
+// lancamento), mas atualiza o objeto local em `todos` na hora -- sem
+// isso, o render() chamado logo depois (aqui mesmo ou no "Marcar todos")
+// usava o valor antigo de ultimaObraNome e a pessoa so entrava em
+// "Equipe da obra" depois de recarregar a pagina inteira.
+function atualizarUltimaObra(funcId){
+  const dataStr = mesCarregado + "-" + String(diaDaData()).padStart(2,"0");
+  const f = todos.find(x => x.id === funcId);
+  // Nunca deixa uma correção de um dia retroativo (data mais antiga que o
+  // cache atual) substituir "última obra" por uma obra velha -- achado da
+  // análise: corrigir um lançamento antigo reescrevia esse cache com a data
+  // sendo editada, não com a data de hoje, empurrando o valor pra trás no
+  // tempo. Só anda pra frente (ou grava quando ainda não existe cache).
+  if(f && f.ultimaObraData && f.ultimaObraData > dataStr) return;
+  if(f){
+    f.ultimaObraId = obra.value;
+    f.ultimaObraNome = obra.value;
+    f.ultimaObraData = dataStr;
+  }
+  db.doc("funcionarios/" + funcId).update({
+    ultimaObraId: obra.value,
+    ultimaObraNome: obra.value,
+    ultimaObraData: dataStr
+  }).catch(()=>{});
+}
+
+// Escreve dentro de uma transação que primeiro confere se o dia ainda está
+// exatamente como estava na leitura fresca feita no início de
+// aplicarLancamento() -- se outro aparelho escreveu nesse meio-tempo
+// (entre ler e decidir/confirmar na tela), aborta com aviso em vez de
+// sobrescrever silenciosamente por cima (achado da análise: a checagem de
+// conflito usava só o cache local, sem reler o servidor).
+async function escreverComProtecao(ref, upd, dia, mEsperado, tEsperado){
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    const info = snap.data() || { dias: {} };
+    const diaTx = (info.dias || {})[dia] || {};
+    if((diaTx.m||"") !== mEsperado || (diaTx.t||"") !== tEsperado){
+      const erro = new Error("Esse dia foi alterado por outro aparelho enquanto você decidia. Reabra o funcionário pra ver o valor atual antes de lançar de novo.");
+      erro.conflitoConcorrencia = true;
+      throw erro;
+    }
+    tx.update(ref, upd);
+  });
+  return await ref.get();
+}
+
+// Grava de verdade em funcionarios/{funcId}/pontos/{mes}, direto nos
+// campos dias.{dia}.m/dias.{dia}.t -- o mesmo doc que index.html e
+// cartoes.html leem. Lê o estado FRESCO do servidor (não o cache local
+// dadosMes, que pode estar minutos desatualizado) pra decidir se há
+// conflito, e a escrita final passa por escreverComProtecao() acima.
+async function aplicarLancamento(func, status){
+  const dia = diaDaData();
+  const obraSel = obra.value;
+  const ref = await garantirDocPontos(func.id, mesCarregado);
+  const snapFresco = await ref.get();
+  const infoFresca = snapFresco.data() || { dias: {} };
+  const diaAtual = (infoFresca.dias || {})[dia] || {};
+  const m = diaAtual.m || "", t = diaAtual.t || "";
+  const mReal = m && !ehMarcador(m);
+  const tReal = t && !ehMarcador(t);
+
+  // Uma obra não pode substituir período que já pertence a um dia fechado
+  // por OUTRA obra -- só o painel principal corrige isso (achado da
+  // análise: o fechamento só considerava a obra selecionada agora, não a
+  // obra dona do período já lançado).
+  async function bloqueadoPorFechamento(obraDoConflito){
+    const snapF = await db.doc("fechamentosDia/" + data.value + "_" + obraDoConflito).get();
+    return snapF.exists && !!snapF.data().fechado;
+  }
+
+  try {
+    if(status === "clear"){
+      // Limpar o lançamento de 1 pessoa nesta obra -- só apaga os períodos
+      // que realmente pertencem a essa obra (mesmo critério do "Limpar
+      // lançamentos" em lote); Falta não é de obra nenhuma, não é tocada.
+      const upd = {};
+      if(m === obraSel) upd["dias."+dia+".m"] = "";
+      if(t === obraSel) upd["dias."+dia+".t"] = "";
+      if(!Object.keys(upd).length) return true;
+      upd.statusConferencia = invalidarConferenciaPatch(infoFresca, dia);
+      upd.concordanciaFuncionario = invalidarConcordanciaPatch(infoFresca, dia);
+      const snap = await escreverComProtecao(ref, upd, dia, m, t);
+      dadosMes[func.id] = snap.data();
+      return true;
+    }
+
+    if(status === "absent"){
+      // Falta = Modelo A, dia inteiro -- se ja tem trabalho real lancado
+      // (nessa obra ou noutra), confirma antes de apagar e sobrescrever.
+      if(mReal || tReal){
+        const obraExistente = mReal ? m : t;
+        if(await bloqueadoPorFechamento(obraExistente)){
+          alert(`${func.nome} já tem "${obraExistente}" lançado nesse dia, e esse dia já foi fechado por essa obra. A correção precisa ser feita no painel principal.`);
+          return false;
+        }
+        const ok = await confirmarAcaoGeral(`${func.nome} já tem "${obraExistente}" lançado nesse dia.\n\nMarcar Falta apaga esse lançamento e deixa o dia inteiro como falta. Confirma?`);
+        if(!ok) return false;
+      }
+      const upd = {
+        ["dias."+dia+".m"]:"FALTA", ["dias."+dia+".t"]:"FALTA",
+        statusConferencia: invalidarConferenciaPatch(infoFresca, dia),
+        concordanciaFuncionario: invalidarConcordanciaPatch(infoFresca, dia)
+      };
+      const snap = await escreverComProtecao(ref, upd, dia, m, t);
+      dadosMes[func.id] = snap.data();
+      return true;
+    }
+
+    const alvoM = status==="full" || status==="morning";
+    const alvoT = status==="full" || status==="afternoon";
+    const conflitoM = alvoM && mReal && m!==obraSel;
+    const conflitoT = alvoT && tReal && t!==obraSel;
+    if(conflitoM || conflitoT){
+      const obraConflito = conflitoM ? m : t;
+      if(await bloqueadoPorFechamento(obraConflito)){
+        alert(`${func.nome} já possui lançamento na obra "${obraConflito}" nesta data, e esse dia já foi fechado por essa obra. A correção precisa ser feita no painel principal.`);
+        return false;
+      }
+      const ok = await confirmarAcaoGeral(`${func.nome} já possui lançamento na obra "${obraConflito}" nesta data.\n\nDeseja substituir por "${obraSel}"?`);
+      if(!ok) return false;
+    }
+
+    const upd = {};
+    if(alvoM) upd["dias."+dia+".m"] = obraSel;
+    if(alvoT) upd["dias."+dia+".t"] = obraSel;
+    // limpa um período que NÃO está sendo gravado agora se ele ainda for a
+    // MESMA obra que acabou de deixar de ser o alvo (achado da análise:
+    // trocar "Dia inteiro" por "Manhã" deixava a tarde grudada na mesma
+    // obra, ainda contando 1 diária inteira) -- período de OUTRA obra real
+    // OU uma Falta legítima do outro período (agora que Falta pode ser só
+    // de manhã ou só de tarde, 08/09/2026) continuam preservados, sem mexer.
+    if(!alvoT && t===obraSel) upd["dias."+dia+".t"] = "";
+    if(!alvoM && m===obraSel) upd["dias."+dia+".m"] = "";
+    upd.statusConferencia = invalidarConferenciaPatch(infoFresca, dia);
+    upd.concordanciaFuncionario = invalidarConcordanciaPatch(infoFresca, dia);
+
+    const snap = await escreverComProtecao(ref, upd, dia, m, t);
+    dadosMes[func.id] = snap.data();
+    atualizarUltimaObra(func.id);
+    return true;
+  } catch(e){
+    if(e && e.conflitoConcorrencia){ alert(e.message); return false; }
+    throw e;
+  }
+}
+
+async function aplicar(status){
+  if(!atual)return;
+  if(isFechado())return;
+  if(foraDoHorarioAgora())return;
+  if(salvando)return;
+  const func = atual;
+  fecharModal();
+  await executarComSalvamento(() => aplicarLancamento(func, status));
+}
+
+document.querySelectorAll("[data-status]").forEach(b=>{
+  b.addEventListener("click",()=>pedirConfirmacao(b.dataset.status));
+});
+document.getElementById("cancelar").addEventListener("click",fecharModal);
+document.getElementById("btnVoltar").addEventListener("click",mostrarEscolhas);
+document.getElementById("btnConfirmar").addEventListener("click",()=>{
+  aplicar(statusPendente); // aplicar() ja chama fecharModal(), que reseta a tela de escolhas
+});
+backdrop.addEventListener("click",e=>{if(e.target===backdrop)fecharModal()});
+
+document.getElementById("btnSalvarHoras").addEventListener("click", async () => {
+  if(!atual)return;
+  if(isFechado())return;
+  if(foraDoHorarioAgora())return;
+  if(salvando)return;
+  const func = atual;
+  const valor = Number(document.getElementById("inputHorasExtras").value) || 0;
+  fecharModal();
+  await executarComSalvamento(async () => {
+    const dia = diaDaData();
+    const ref = await garantirDocPontos(func.id, mesCarregado);
+    const info = dadosMes[func.id] || {};
+    await ref.update({
+      ["dias."+dia+".horasExtras"]: valor,
+      statusConferencia: invalidarConferenciaPatch(info, dia),
+      concordanciaFuncionario: invalidarConcordanciaPatch(info, dia)
+    });
+    const snap = await ref.get();
+    dadosMes[func.id] = snap.data();
+  });
+});
+
+document.getElementById("todosDia").addEventListener("click",async ()=>{
+  if(!dataValidaParaLancamento())return;
+  if(isFechado())return;
+  if(foraDoHorarioAgora())return;
+  if(salvando)return;
+  await executarComSalvamento(async () => {
+    const dia = diaDaData();
+    const obraSel = obra.value;
+    const conflitos=[];
+
+    // So marca quem esta na "Equipe da obra" (cadastrado via obraPadrao ou
+    // com lancamento recente ali) -- alguem de outra obra que precise ser
+    // lancado aqui e feito buscando o nome e marcando individualmente, nao
+    // por esse botao (pedido do Rubens, depois de "Marcar todos" ter
+    // marcado os 26 ativos inteiros por engano num teste).
+    // sequencial (nao Promise.all) pra evitar corrida de escritas no mesmo
+    // funcionario e manter dadosMes sempre consistente entre uma pessoa e
+    // outra -- e um botao usado raramente, alguns segundos a mais aqui nao
+    // pesam.
+    for(const f of equipeDaObra(todos)){
+      const diaAtual = diaDoFuncionario(f.id);
+      const m = diaAtual.m || "", t = diaAtual.t || "";
+      const mRealDiferente = m && !ehMarcador(m) && m !== obraSel;
+      const tRealDiferente = t && !ehMarcador(t) && t !== obraSel;
+      if(mRealDiferente || tRealDiferente){
+        conflitos.push(`${f.nome} (${mRealDiferente ? m : t})`);
+        continue;
+      }
+      // Falta agora pode ser só de um período (08/09/2026) -- preserva
+      // quem já tem falta em qualquer um dos períodos, mesmo que
+      // statusParaExibir() mostre "pending" pra esta obra especificamente
+      // (a falta pode não ter nada a ver com esta obra). Sem essa checagem
+      // "Marcar equipe" sobrescreveria uma falta legítima de meio período
+      // com dia inteiro desta obra.
+      if(m === "FALTA" || t === "FALTA") continue;
+      // Preserva quem já tem algo lançado nesta obra (dia inteiro, meio
+      // período ou falta) -- achado da análise: "Marcar todos" virava
+      // faltas e meios períodos em dia inteiro sem avisar. O botão agora
+      // só preenche quem está "Não lançado" de verdade.
+      if(statusParaExibir(f.id).cls !== "pending") continue;
+      const ref = await garantirDocPontos(f.id, mesCarregado);
+      const info = dadosMes[f.id] || {};
+      await ref.update({
+        ["dias."+dia+".m"]: obraSel,
+        ["dias."+dia+".t"]: obraSel,
+        statusConferencia: invalidarConferenciaPatch(info, dia),
+        concordanciaFuncionario: invalidarConcordanciaPatch(info, dia)
+      });
+      const snap = await ref.get();
+      dadosMes[f.id] = snap.data();
+      atualizarUltimaObra(f.id);
+    }
+
+    if(conflitos.length){
+      alert("Alguns funcionários não foram alterados porque já estão lançados em outra obra:\n\n"+conflitos.join("\n"));
+    }
+  });
+});
+
+document.getElementById("fecharDia").addEventListener("click",async ()=>{
+  if(isFechado())return;
+  if(foraDoHorarioAgora())return;
+  if(!dataValidaParaLancamento())return;
+  if(salvando)return;
+  const pendentes=equipeDaObra(todos).filter(f=>statusParaExibir(f.id).cls==="pending");
+  if(pendentes.length){
+    alert("Ainda existem funcionários pendentes.");
+    return;
+  }
+  if(!(await confirmarAcaoGeral(`Fechar o dia ${data.value.split("-").reverse().join("/")} da obra ${obra.value}?\n\nDepois disso os lançamentos ficarão bloqueados.`)))return;
+  await executarComSalvamento(async () => {
+    await db.doc("fechamentosDia/" + chaveFechamento()).set({
+      obra: obra.value,
+      data: data.value,
+      fechado: true,
+      atualizadoEm: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    fechadoAtual = true;
+  });
+});
+
+document.getElementById("limparDia").addEventListener("click",async ()=>{
+  if(isFechado())return;
+  if(foraDoHorarioAgora())return;
+  if(salvando)return;
+  if(!(await confirmarAcaoGeral("Apagar os lançamentos desta obra nesta data?")))return;
+  await executarComSalvamento(async () => {
+    const dia = diaDaData();
+    const obraSel = obra.value;
+    const dataStr = mesCarregado + "-" + String(dia).padStart(2,"0");
+    for(const f of todos){
+      const diaAtual = diaDoFuncionario(f.id);
+      const upd = {};
+      if(diaAtual.m === obraSel) upd["dias."+dia+".m"] = "";
+      if(diaAtual.t === obraSel) upd["dias."+dia+".t"] = "";
+      if(Object.keys(upd).length){
+        const info = dadosMes[f.id] || {};
+        upd.statusConferencia = invalidarConferenciaPatch(info, dia);
+        upd.concordanciaFuncionario = invalidarConcordanciaPatch(info, dia);
+        const ref = await garantirDocPontos(f.id, mesCarregado);
+        await ref.update(upd);
+        const snap = await ref.get();
+        dadosMes[f.id] = snap.data();
+      }
+      // se o cache de "ultima obra" apontava exatamente pra esse dia+obra que
+      // acabou de ser apagado, ele ficaria orfao (gruda em "Equipe da obra"
+      // pra sempre, mesmo sem lancamento nenhum) -- limpa junto.
+      if(f.ultimaObraNome === obraSel && f.ultimaObraData === dataStr){
+        f.ultimaObraId = "";
+        f.ultimaObraNome = "";
+        f.ultimaObraData = "";
+        db.doc("funcionarios/" + f.id).update({
+          ultimaObraId: firebase.firestore.FieldValue.delete(),
+          ultimaObraNome: firebase.firestore.FieldValue.delete(),
+          ultimaObraData: firebase.firestore.FieldValue.delete()
+        }).catch(()=>{});
+      }
+    }
+  });
+});
+
+obra.addEventListener("change",async ()=>{
+  try {
+    await carregarFechado();
+  } catch(e){ mostrarErroCarregamento(); return; }
+  render();
+});
+// Extraída pra ser chamada tanto pelo "change" (defesa em profundidade --
+// não deve mais disparar por interação real, já que o campo virou
+// readonly) quanto pela virada automática de dia à meia-noite, no
+// setInterval lá em cima.
+async function atualizarParaNovaData(){
+  dataValidaParaLancamento();
+  const novoMes = mesDaData();
+  try {
+    if(novoMes !== mesCarregado){
+      lista.innerHTML = '<div style="padding:16px;color:var(--muted)">Carregando período…</div>';
+      await carregarDadosMes(novoMes);
+    }
+    await carregarFechado();
+  } catch(e){ mostrarErroCarregamento(); return; }
+  render();
+}
+data.addEventListener("change", atualizarParaNovaData);
+document.getElementById("buscaFunc").addEventListener("input",render);
+
+document.querySelectorAll(".sum").forEach(b => {
+  b.addEventListener("click", () => {
+    filtroResumo = (filtroResumo === b.dataset.cls) ? null : b.dataset.cls;
+    render();
+  });
+});
+
+// iniciarDados() agora é chamada pelo onAuthStateChanged() acima, só
+// depois de confirmar o login e carregar o perfil (não mais direto aqui).
+
+// ---------------- PWA: service worker + botao de instalar ----------------
+// Decisao (04/09/2026): so instalavel, sem cache offline por enquanto --
+// evoluir pra isso depois se fizer falta. Ver CLAUDE.md.
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+
+const btnInstalar=document.getElementById("btnInstalar");
+const statusInstalar=document.getElementById("statusInstalar");
+let promptInstalacao=null;
+
+window.addEventListener("beforeinstallprompt",(e)=>{
+  e.preventDefault();
+  promptInstalacao=e;
+  btnInstalar.style.display="inline-block";
+  statusInstalar.textContent="Instalável neste navegador.";
+});
+
+btnInstalar.addEventListener("click",async ()=>{
+  if(!promptInstalacao) return;
+  promptInstalacao.prompt();
+  const escolha=await promptInstalacao.userChoice;
+  statusInstalar.textContent=escolha.outcome==="accepted" ? "Instalado!" : "Instalação cancelada.";
+  promptInstalacao=null;
+  btnInstalar.style.display="none";
+});
+
+window.addEventListener("appinstalled",()=>{
+  statusInstalar.textContent="App instalado — abra pela tela inicial.";
+});
+
+if(window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone){
+  statusInstalar.textContent="Rodando como app instalado ✓";
+} else if("serviceWorker" in navigator){
+  setTimeout(()=>{
+    if(!promptInstalacao) statusInstalar.textContent="Em iOS: Compartilhar → Adicionar à Tela de Início.";
+  },2500);
+}
+</script>
+</body>
+</html>

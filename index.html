@@ -1,0 +1,2744 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<script src="campolina-config.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Equipe Campolina</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root{
+    --bg: #f2f4f9;
+    --surface: #ffffff;
+    --surface-2: #f8f9fc;
+    --ink: #151b2c;
+    --muted: #626e88;
+    --line: #e2e6f0;
+    --accent: #2451d6;
+    --accent-ink: #ffffff;
+    --hero-1: #0b1330;
+    --hero-2: #1c3fb8;
+    --good-bg: #dcf3e6;
+    --good-ink: #157a4a;
+    --warn-bg: #fbe6d4;
+    --warn-ink: #a85417;
+    --danger-ink: #b3261e;
+    --shadow: 0 1px 2px rgba(20,26,50,.04), 0 8px 24px rgba(20,26,50,.06);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #0d1220;
+      --surface: #151c30;
+      --surface-2: #1a2238;
+      --ink: #eef1fb;
+      --muted: #94a1c4;
+      --line: #262f4a;
+      --accent: #6d8bff;
+      --accent-ink: #0b1330;
+      --hero-1: #070b1a;
+      --hero-2: #1a2f8c;
+      --good-bg: #113224;
+      --good-ink: #6fe0a6;
+      --warn-bg: #3a2410;
+      --warn-ink: #f0a862;
+      --danger-ink: #ff8f87;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #0d1220;
+    --surface: #151c30;
+    --surface-2: #1a2238;
+    --ink: #eef1fb;
+    --muted: #94a1c4;
+    --line: #262f4a;
+    --accent: #6d8bff;
+    --accent-ink: #0b1330;
+    --hero-1: #070b1a;
+    --hero-2: #1a2f8c;
+    --good-bg: #113224;
+    --good-ink: #6fe0a6;
+    --warn-bg: #3a2410;
+    --warn-ink: #f0a862;
+    --danger-ink: #ff8f87;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3{
+    font-family: "Archivo", system-ui, sans-serif;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .num, .stat-num, .emp-dias{
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .page{ max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  .hero{
+    background: linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 130%);
+    border-radius: var(--radius);
+    padding: 30px 32px;
+    color: #f5f7ff;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    box-shadow: var(--shadow);
+  }
+  .hero-eyebrow{
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #a9bdfb;
+    margin-bottom: 10px;
+  }
+  .hero h1{ font-size: 28px; font-weight: 800; color: #fff; }
+  .hero-sub{ font-size: 13.5px; color: #cbd5f7; margin-top: 8px; max-width: 440px; line-height: 1.5; }
+  .hero-link{
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 12px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.18);
+    color: #eaf0ff;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .hero-link:hover{ background: rgba(255,255,255,.16); }
+  .login-status-row{ margin-top: 14px; display: flex; gap: 10px; align-items: center; font-size: 12.5px; color: #cbd5f7; }
+  .sair-btn{ background: rgba(255,255,255,.12); color: #fff; border: 0; border-radius: 8px; padding: 6px 12px; font-size: 11.5px; font-weight: 700; cursor: pointer; }
+  .login-card{ max-width: 360px; margin: 14px 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+  .erro-login{ margin-top: 12px; padding: 10px 12px; border-radius: 9px; background: rgba(179,38,30,.1); color: var(--danger-ink); font-size: 13px; font-weight: 600; }
+  .hero-stat{
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 12px;
+    padding: 14px 20px;
+    text-align: center;
+    min-width: 108px;
+    flex-shrink: 0;
+  }
+  .hero-stat .num{ font-size: 26px; font-weight: 500; color: #fff; line-height: 1; }
+  .hero-stat .lbl{ font-size: 10px; color: #b9c6f4; margin-top: 6px; letter-spacing: .03em; }
+
+  .stats-row{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .stats-row-4{ grid-template-columns: repeat(4, 1fr); }
+  .stat-sub{ font-size: 10.5px; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+  @media (max-width: 640px){
+    .stats-row-4{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .stat-label{ font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .stat-num{ font-size: 24px; font-weight: 500; margin-top: 6px; color: var(--ink); }
+  .stat-good{ color: var(--good-ink); }
+  .stat-warn{ color: var(--warn-ink); }
+  .stat-card.filtro{ cursor: pointer; user-select: none; transition: border-color .15s, box-shadow .15s; }
+  .stat-card.filtro:hover{ border-color: var(--accent); }
+  .stat-card.filtro.active{ border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+  .obra-filtro-row{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .obra-filtro-chip{
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .obra-filtro-chip .qtd{ font-weight: 700; }
+  .obra-filtro-chip:hover{ border-color: currentColor; }
+  .obra-filtro-chip.active{ box-shadow: 0 0 0 1px currentColor; }
+
+  .toolbar{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .search-wrap{ position: relative; flex: 1; min-width: 220px; }
+  .search-wrap svg{ position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: .5; }
+  .search-wrap input{
+    width: 100%;
+    padding: 10px 12px 10px 34px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 13.5px;
+  }
+  .search-wrap input:focus{ outline: 2px solid var(--accent); outline-offset: 1px; }
+  .btn{
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 9px;
+    padding: 10px 15px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .btn:hover{ border-color: var(--accent); }
+  .btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 1px; }
+  .btn-primary{ background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  .btn-primary:hover{ filter: brightness(1.06); border-color: transparent; }
+  .btn-ghost{ background: transparent; }
+  .btn-danger{ background: transparent; border-color: var(--danger-ink); color: var(--danger-ink); }
+  .btn-danger:hover{ background: var(--danger-ink); color: var(--surface); border-color: var(--danger-ink); }
+
+  .list-wrap{
+    margin-top: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .emp-row{
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .emp-row:last-child{ border-bottom: none; }
+  .avatar{
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; color: #fff;
+    flex-shrink: 0;
+  }
+  .emp-name{ font-weight: 600; font-size: 14px; }
+  .emp-sub{ font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .pill{
+    border: none;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .pill-ativo{ background: var(--good-bg); color: var(--good-ink); }
+  .pill-inativo{ background: var(--warn-bg); color: var(--warn-ink); }
+  .row-actions{ display: flex; gap: 6px; }
+  .icon-btn{
+    background: none; border: none; cursor: pointer;
+    width: 30px; height: 30px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+  }
+  .icon-btn:hover{ background: var(--surface-2); color: var(--ink); }
+
+  .obra-row{
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .obra-row:last-child{ border-bottom: none; }
+  .obra-dot{
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .obra-nome{ font-weight: 600; font-size: 14px; }
+  .obra-apontador{ font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+
+  .empty-state, .loading-state{
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13.5px;
+  }
+
+  .overlay{
+    position: fixed; inset: 0;
+    background: rgba(10,14,28,.5);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 20;
+  }
+  .modal{
+    background: var(--surface);
+    border-radius: var(--radius);
+    width: 100%; max-width: 420px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h2{ font-size: 18px; margin-bottom: 4px; }
+  .modal .modal-sub{ font-size: 12.5px; color: var(--muted); margin-bottom: 18px; }
+  .field{ margin-bottom: 14px; }
+  .field label{ display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--muted); }
+  .field input, .field select, .field textarea{
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 13.5px;
+    resize: vertical;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline: 2px solid var(--accent); outline-offset: 1px; }
+  .modal-actions{ display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 10px; }
+  .modal-actions-right{ display: flex; gap: 8px; }
+  .link-danger{ background: none; border: none; color: var(--danger-ink); font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; padding: 6px 4px; }
+
+  .toast{
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--bg);
+    padding: 10px 18px; border-radius: 9px; font-size: 13px; font-weight: 500;
+    box-shadow: var(--shadow);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+    z-index: 30;
+  }
+  .toast.show{ opacity: 1; }
+
+  .segmented{
+    display: inline-flex;
+    max-width: 100%;
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 3px;
+    margin-top: 18px;
+    box-shadow: var(--shadow);
+  }
+  .segmented button{
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    padding: 12px 22px;
+    border-radius: 7px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .segmented button.active{ background: var(--accent); color: var(--accent-ink); }
+
+  .mes-tabs{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .mes-tab{
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 14px;
+    min-width: 132px;
+    cursor: pointer;
+    background: var(--surface);
+  }
+  .mes-tab:hover{ border-color: #c7d3ea; }
+  .mes-tab.selected{ border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .mes-tab-nome{ font-weight: 700; font-size: 13px; }
+  .mes-tab-chave{ font-size: 10.5px; color: var(--muted); margin-bottom: 6px; }
+  .mes-pill{
+    display: inline-block;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: .02em;
+  }
+  .mes-pill-atual{ background: var(--good-bg); color: var(--good-ink); }
+  .mes-pill-encerrado{ background: var(--surface-2); color: var(--muted); }
+  .mes-pill-futuro{ background: var(--surface-2); color: var(--muted); }
+
+  .apont-header h2{ font-size: 20px; margin-bottom: 2px; }
+  .apont-header .modal-sub{ margin-bottom: 0; }
+
+  .apont-filtros{
+    display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+    margin-top: 18px;
+  }
+  .apont-filtros .field{ margin-bottom: 0; min-width: 200px; flex: 1 1 200px; }
+  .apont-filtros .btn{ flex-shrink: 0; }
+
+  .apont-resumo-func{
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    margin-top: 20px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .apont-resumo-func .avatar{ width: 44px; height: 44px; font-size: 15px; flex-shrink: 0; }
+  .apont-resumo-info{ margin-right: auto; }
+  .apont-resumo-nome{ font-size: 15px; font-weight: 700; }
+  .apont-resumo-sub{ font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .apont-resumo-sub .status-ativo{ color: var(--good-ink); font-weight: 700; }
+  .apont-resumo-sub .status-inativo{ color: var(--warn-ink); font-weight: 700; }
+
+  .apont-mini-stats{ display: flex; gap: 10px; flex-wrap: wrap; }
+  .apont-mini-stat{
+    min-width: 82px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: var(--surface-2);
+    text-align: center;
+  }
+  .apont-mini-stat .num{ font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .apont-mini-stat .lbl{ font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; margin-top: 1px; }
+  .apont-mini-stat .sub{ font-size: 9px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .apont-mini-stat.total{ background: var(--good-bg); }
+  .apont-mini-stat.total .num, .apont-mini-stat.total .lbl{ color: var(--good-ink); }
+
+  .apont-grade-titulo{ font-size: 13px; font-weight: 700; margin: 20px 0 8px; }
+  .apont-grade-wrap{ overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .apont-grade-row{ display: flex; }
+  .apont-grade-row + .apont-grade-row{ border-top: 1px solid var(--line); }
+  .apont-grade-rotulo{
+    width: 74px; flex-shrink: 0;
+    padding: 6px 8px;
+    font-size: 9.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .02em;
+    background: var(--surface-2);
+    position: sticky; left: 0;
+    display: flex; align-items: center;
+  }
+  .apont-grade-row > div:not(.apont-grade-rotulo){
+    width: 34px; flex-shrink: 0;
+    padding: 6px 2px;
+    text-align: center;
+    font-size: 10.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cel-periodo{ border-radius: 4px; margin: 3px 2px; font-weight: 700; }
+  .cel-periodo.tipo-d{ background: var(--good-bg); color: var(--good-ink); }
+  .cel-periodo.tipo-m{ background: var(--warn-bg); color: var(--warn-ink); }
+  .cel-periodo.tipo-t{ background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+  .cel-periodo.tipo-f{ background: color-mix(in srgb, var(--danger-ink) 16%, transparent); color: var(--danger-ink); }
+  .cel-periodo.tipo-vazio{ color: var(--muted); }
+
+  .apont-periodo-tag{
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .apont-periodo-tag.tipo-d{ background: var(--good-bg); color: var(--good-ink); }
+  .apont-periodo-tag.tipo-m{ background: var(--warn-bg); color: var(--warn-ink); }
+  .apont-periodo-tag.tipo-t{ background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+  .apont-periodo-tag.tipo-f{ background: color-mix(in srgb, var(--danger-ink) 16%, transparent); color: var(--danger-ink); }
+
+  .apont-legenda{ display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 11px; color: var(--muted); }
+  .apont-legenda .dot{ display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 4px; vertical-align: middle; }
+
+  .apont-baixo{ display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-top: 20px; align-items: start; }
+  @media (max-width: 760px){ .apont-baixo{ grid-template-columns: 1fr; } }
+  .apont-card{ border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 16px; }
+  .apont-card h3{ font-size: 13px; margin-bottom: 10px; }
+
+  .apont-detalhe-row{
+    display: grid; grid-template-columns: 84px 1fr 96px 56px;
+    gap: 10px; align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
+  }
+  .apont-detalhe-row:last-child{ border-bottom: none; }
+  .apont-detalhe-row .valor{ text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  .apont-obra-row{
+    display: grid; grid-template-columns: 1fr 66px;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
+  }
+  .apont-obra-row.total{ font-weight: 700; border-top: 2px solid var(--line); border-bottom: none; padding-top: 9px; margin-top: 2px; }
+  .apont-obra-row div:nth-child(2){ text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Consulta por obra (14/09/2026) -- Apontamentos ganhou a opcao de
+     consultar so pela Obra, sem escolher Funcionario: lista todo mundo que
+     lancou pelo menos um periodo naquela obra no mes, com o total de dias.
+     Cada linha e clicavel e leva pro detalhe daquela pessoa (mesma tela de
+     sempre, com o filtro de obra ja aplicado). */
+  .apont-pessoa-row{
+    display: grid; grid-template-columns: 1fr 90px;
+    gap: 10px; align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .apont-pessoa-row:last-child{ border-bottom: none; }
+  .apont-pessoa-row:hover{ background: var(--surface-2); }
+  .apont-pessoa-row .nome{ font-weight: 600; }
+  .apont-pessoa-row .funcao{ font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+  .apont-pessoa-row .dias{ text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .apont-pessoa-row.cabecalho{ cursor: default; font-weight: 700; color: var(--muted); font-size: 11px; text-transform: uppercase; padding-bottom: 7px; }
+  .apont-pessoa-row.cabecalho:hover{ background: none; }
+
+  .apont-obs{ font-size: 12px; color: var(--muted); line-height: 1.65; margin: 0; padding-left: 16px; }
+  .apont-obs li{ margin-bottom: 4px; }
+
+  .conf-row{
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .conf-row:last-child{ border-bottom: none; }
+  .pill-conferido{ background: var(--good-bg); color: var(--good-ink); }
+  .pill-pendente{ background: var(--warn-bg); color: var(--warn-ink); }
+  .conf-quinzena-col{ display: flex; flex-direction: column; align-items: stretch; gap: 5px; min-width: 108px; }
+  .conf-quinzena-col .pill{
+    padding: 3px 10px; font-size: 10px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  }
+  .conf-quinzena-col .q-lbl{ font-size: 9px; font-weight: 800; opacity: .7; }
+  .conf-quinzena-col .btn{ font-size: 11.5px; padding: 6px 10px; justify-content: center; }
+
+  /* Divergencia informada pelo funcionario (11/09/2026) -- badge na lista
+     da Conferencia de Ponto e secao de resposta dentro do cartao. Badge so
+     aparece quando divergenciasAbertasPorFunc[f.id] existir (best-effort,
+     depende de um indice de collection group no Firestore -- ver
+     carregarContagemDivergencias()). */
+  .divergencia-badge{
+    display: inline-flex; align-items: center; gap: 4px;
+    background: color-mix(in srgb, var(--danger-ink) 16%, transparent);
+    color: var(--danger-ink);
+    font-size: 10.5px; font-weight: 700;
+    border-radius: 999px; padding: 2px 8px; margin-top: 3px; width: fit-content;
+  }
+  .divergencia-item{ border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; font-size: 13px; }
+  .divergencia-item .cabecalho{ display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .divergencia-item .resposta{ margin-top: 8px; padding: 8px 10px; background: var(--surface-2); border-radius: 8px; font-size: 12.5px; }
+  .divergencia-item .resposta-form{ margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
+  .divergencia-item .div-corrigir-label{ display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; margin-bottom: 8px; cursor: pointer; }
+  .ficha-divergencias .btn{ width: 100%; justify-content: center; }
+
+  /* Página cheia do cartão do funcionário (11/09/2026) -- pedido do Rubens:
+     antes era um modal flutuante arrastável/redimensionável; virou página
+     cheia (com "Voltar à equipe"), cartão + painel lateral de divergências,
+     igual o layout do protótipo que ele mandou pra análise -- sem popup.
+     Perdeu de propósito o arrastar/redimensionar da versão anterior. */
+  #pagina-ficha{ max-width: 1100px; margin: 0 auto; }
+  .pagina-ficha-grid{ display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  .ficha-pagina-card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    box-shadow: var(--shadow);
+  }
+  .ficha-principal{ flex: 2 1 480px; }
+  .ficha-pagina-lateral{ flex: 1 1 280px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .ficha-head{
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+    user-select: text;
+  }
+  .ficha-head h2{ font-size: 21px; }
+  .ficha-head .modal-sub{ margin-bottom: 0; font-size: 14px; }
+  .ficha-pix{ font-size: 13px; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; user-select: text; }
+  .ficha-periodo{ font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .ficha-resumo{
+    margin-top: 12px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface-2);
+  }
+  .ficha-resumo-titulo{
+    font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 5px;
+  }
+  .ficha-resumo-chips{ display: flex; flex-wrap: wrap; gap: 5px; }
+  .ficha-resumo-chip{
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ficha-resumo-chip .qtd{ font-weight: 700; }
+  .ficha-resumo-total{
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-top: 6px; padding-top: 5px;
+    border-top: 1px solid var(--line);
+  }
+  .ficha-resumo-total .lbl{ font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .ficha-resumo-total .val{ font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .dias-scroll{ margin-top: 14px; }
+  table.dias{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 12.5px;
+  }
+  table.dias th{
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    padding: 5px 6px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+    position: sticky; top: 0;
+  }
+  table.dias td{
+    padding: 2.5px 5px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  table.dias td.dia-col{ font-weight: 700; color: var(--muted); width: 34px; }
+  table.dias td.qtd-col{ font-weight: 700; width: 46px; }
+  table.dias td.horas-col{ width: 52px; }
+  .horas-input{
+    width: 100%;
+    padding: 3px 4px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 11.5px;
+    text-align: center;
+  }
+  .obra-select{
+    width: 100%;
+    padding: 3px 4px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 11.5px;
+  }
+  .obra-select.marcado{ color: var(--danger-ink); font-weight: 700; }
+  .obra-select:disabled, .pill:disabled{ opacity: .55; cursor: not-allowed; }
+
+  [hidden]{ display: none !important; }
+
+  @media (max-width: 600px){
+    .emp-row{ grid-template-columns: auto 1fr; row-gap: 8px; }
+    .row-actions{ grid-column: 2; justify-self: end; }
+    .hero{ flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="hero">
+    <div class="hero-header-text">
+      <div class="hero-eyebrow">Gestão de Equipes · Campolina</div>
+      <h1>Equipe Campolina</h1>
+      <div class="hero-sub">Cadastro, função e situação de cada trabalhador em um só lugar.</div>
+      <a class="hero-link" href="cartoes.html" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Link pra equipe conferir o cartão
+      </a>
+    </div>
+    <div class="hero-stat">
+      <div class="num" id="hero-total">—</div>
+      <div class="lbl">na equipe</div>
+    </div>
+  </div>
+
+  <div class="login-status-row" id="loginStatusRow" style="display:none">
+    <span id="nomeLogado"></span>
+    <button class="sair-btn" id="btnSair" type="button">Sair</button>
+  </div>
+
+  <div class="login-card" id="telaLogin">
+    <div class="field">
+      <label for="loginUsuario">Usuário</label>
+      <input id="loginUsuario" type="text" placeholder="ex: admin" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="loginSenha">Senha</label>
+      <input id="loginSenha" type="password" placeholder="Senha" autocomplete="current-password">
+    </div>
+    <div class="erro-login" id="loginErro" style="display:none"></div>
+    <button class="btn btn-primary" id="btnLoginEntrar" style="margin-top:8px;width:100%">Entrar</button>
+  </div>
+
+  <div id="appConteudo" style="display:none">
+  <div class="segmented">
+    <button id="seg-equipe" class="active">Lista de Funcionários</button>
+    <button id="seg-conferencia">Conferência de Ponto</button>
+    <button id="seg-fechamento">Banco de Dados</button>
+    <button id="seg-obras">Obras</button>
+  </div>
+
+  <div id="view-equipe">
+    <div class="stats-row">
+      <div class="stat-card filtro active" id="filtro-todos" data-status="todos">
+        <div class="stat-label">Total cadastrado</div>
+        <div class="stat-num" id="stat-total">—</div>
+      </div>
+      <div class="stat-card filtro" id="filtro-ativos" data-status="Ativo">
+        <div class="stat-label">Ativos</div>
+        <div class="stat-num stat-good" id="stat-ativos">—</div>
+      </div>
+      <div class="stat-card filtro" id="filtro-inativos" data-status="Inativo">
+        <div class="stat-label">Inativos</div>
+        <div class="stat-num stat-warn" id="stat-inativos">—</div>
+      </div>
+    </div>
+
+    <div class="obra-filtro-row" id="obra-filtro-row"></div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="busca" type="text" placeholder="Buscar por nome ou função...">
+      </div>
+      <button class="btn" id="btn-exportar">⬇ Exportar CSV</button>
+      <button class="btn btn-primary" id="btn-novo">+ Novo funcionário</button>
+    </div>
+
+    <div class="list-wrap">
+      <div class="loading-state" id="loading-state">Carregando equipe…</div>
+      <div class="empty-state" id="empty-state" hidden>Nenhum funcionário encontrado.</div>
+      <div id="lista"></div>
+    </div>
+  </div>
+
+  <div id="view-conferencia" hidden>
+    <div class="mes-tabs" id="mes-tabs"></div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total no período</div>
+        <div class="stat-num" id="conf-stat-total">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Conferidos</div>
+        <div class="stat-num stat-good" id="conf-stat-conferidos">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pendentes</div>
+        <div class="stat-num stat-warn" id="conf-stat-pendentes">—</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="conf-busca" type="text" placeholder="Buscar por nome ou função...">
+      </div>
+    </div>
+
+    <div class="obra-filtro-row" id="conf-obra-filtro-row"></div>
+
+    <div class="list-wrap">
+      <div class="loading-state" id="conf-loading-state">Carregando período…</div>
+      <div class="empty-state" id="conf-empty-state" hidden>Nenhum funcionário encontrado.</div>
+      <div id="conf-lista"></div>
+    </div>
+  </div>
+
+  <!-- Aba "Banco de Dados" (id/nomes internos ainda dizem "fechamento" --
+       era a antiga aba "Fechamento de Ponto"). Tela "Apontamentos": consulta
+       os dias lançados de um funcionário num mês, com filtro opcional de
+       obra. Ver CLAUDE.md. -->
+  <div id="view-fechamento" hidden>
+    <div class="apont-header">
+      <h2>Apontamentos</h2>
+      <div class="modal-sub">Consulte e gerencie os dias lançados</div>
+    </div>
+
+    <div class="apont-filtros">
+      <div class="field">
+        <label for="apont-funcionario">Funcionário</label>
+        <select id="apont-funcionario"></select>
+      </div>
+      <div class="field">
+        <label for="apont-obra">Obra</label>
+        <select id="apont-obra"></select>
+      </div>
+      <div class="field">
+        <label for="apont-periodo">Período</label>
+        <select id="apont-periodo"></select>
+      </div>
+      <div class="field">
+        <label for="apont-dia">Dia</label>
+        <select id="apont-dia"><option value="">Todos os dias</option></select>
+      </div>
+      <button class="btn btn-primary" id="btn-apont-consultar">Consultar</button>
+    </div>
+
+    <div id="apont-resultado"></div>
+  </div>
+
+  <div id="view-obras" hidden>
+    <div class="stats-row" style="grid-template-columns: 1fr;">
+      <div class="stat-card">
+        <div class="stat-label">Total de obras</div>
+        <div class="stat-num" id="obras-stat-total">—</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="obras-busca" type="text" placeholder="Buscar obra...">
+      </div>
+      <button class="btn btn-primary" id="btn-nova-obra">+ Nova obra</button>
+    </div>
+
+    <div class="list-wrap">
+      <div class="loading-state" id="obras-loading-state">Carregando obras…</div>
+      <div class="empty-state" id="obras-empty-state" hidden>Nenhuma obra cadastrada.</div>
+      <div id="obras-lista"></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="modal">
+    <h2 id="modal-title">Novo funcionário</h2>
+    <div class="modal-sub" id="modal-sub">Preencha os dados abaixo.</div>
+    <form id="form-func">
+      <div class="field">
+        <label for="f-nome">Nome completo</label>
+        <input id="f-nome" required autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-funcao">Função</label>
+        <input id="f-funcao" required autocomplete="off" placeholder="Ex: Pedreiro, Ajudante, Pintor">
+      </div>
+      <div class="field">
+        <label for="f-obra">Obra padrão</label>
+        <select id="f-obra">
+          <option value="">— nenhuma —</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-pix">Chave PIX</label>
+        <input id="f-pix" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-status">Situação</label>
+        <select id="f-status">
+          <option value="Ativo">Ativo</option>
+          <option value="Inativo">Inativo</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="link-danger" id="btn-excluir" hidden>Excluir funcionário</button>
+        <div class="modal-actions-right">
+          <button type="button" class="btn btn-ghost" id="btn-cancelar">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-salvar">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="pagina-ficha" hidden>
+  <button type="button" class="btn btn-primary" id="btn-fechar-ficha" style="margin-bottom:16px">← Voltar à equipe</button>
+  <div class="pagina-ficha-grid">
+    <div class="ficha-pagina-card ficha-principal">
+      <div class="ficha-head">
+        <div>
+          <h2 id="ficha-nome">—</h2>
+          <div class="modal-sub" id="ficha-funcao">—</div>
+          <div class="ficha-pix" id="ficha-pix">—</div>
+        </div>
+        <button type="button" class="pill" id="ficha-status">—</button>
+      </div>
+      <div class="ficha-periodo" id="ficha-periodo">—</div>
+      <div class="ficha-resumo">
+        <div class="ficha-resumo-titulo">Resumo de dias por obra</div>
+        <div class="ficha-resumo-chips" id="ficha-resumo-chips"></div>
+        <div class="ficha-resumo-total">
+          <span class="lbl">Total de dias</span>
+          <span class="val" id="ficha-resumo-total">0.0</span>
+        </div>
+        <div class="ficha-resumo-total">
+          <span class="lbl">Total de horas extras</span>
+          <span class="val" id="ficha-resumo-horas">0</span>
+        </div>
+      </div>
+      <div class="dias-scroll">
+        <table class="dias">
+          <thead>
+            <tr><th>Dia</th><th>Manhã</th><th>Tarde</th><th>Qtd.</th><th>H. Extras</th></tr>
+          </thead>
+          <tbody id="ficha-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="ficha-pagina-lateral">
+      <div class="ficha-pagina-card ficha-divergencias" id="ficha-divergencias-wrap" hidden>
+        <div class="ficha-divergencias-titulo">Divergências informadas pelo funcionário</div>
+        <div id="ficha-divergencias-lista"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="obra-overlay" hidden>
+  <div class="modal">
+    <h2 id="obra-modal-title">Nova obra</h2>
+    <div class="modal-sub">Nome como deve aparecer nos lançamentos de ponto.</div>
+    <form id="form-obra">
+      <div class="field">
+        <label for="f-obra-nome">Nome da obra</label>
+        <input id="f-obra-nome" required autocomplete="off" placeholder="Ex: CRAS, Praça G">
+      </div>
+      <div class="field">
+        <label for="f-obra-apontador">Apontador responsável</label>
+        <select id="f-obra-apontador">
+          <option value="">— Nenhum —</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="link-danger" id="btn-excluir-obra" hidden>Excluir obra</button>
+        <div class="modal-actions-right">
+          <button type="button" class="btn btn-ghost" id="btn-cancelar-obra">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-salvar-obra">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="confirm-overlay" hidden>
+  <div class="modal" style="max-width:360px">
+    <h2 id="confirm-titulo">Confirmar</h2>
+    <div class="modal-sub" id="confirm-texto">Tem certeza?</div>
+    <div class="modal-actions">
+      <div></div>
+      <div class="modal-actions-right">
+        <button type="button" class="btn btn-ghost" id="confirm-cancelar">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirm-ok">Remover</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+// ---------------- Firebase ----------------
+const firebaseConfig = window.CAMPOLINA_FIREBASE_CONFIG;
+validarConfiguracaoCampolina(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+// ---------------- Login (Fase 2 da análise de confiabilidade) ----------------
+// Painel principal só abre pra quem tiver conta com role "admin" em
+// usuarios/{uid} -- mesmo mecanismo de login do apontador.html (mesmo
+// projeto Firebase, "usuário" mapeado internamente pra
+// usuario@campolina-login.local). As regras do Firestore continuam
+// abertas por enquanto (só a interface trava; ver CLAUDE.md).
+const DOMINIO_LOGIN = "campolina-login.local";
+function emailDoUsuario(usuario){
+  const limpo = usuario.trim().toLowerCase();
+  if(limpo.includes("@")) return limpo;
+  return limpo.replace(/\s+/g, "") + "@" + DOMINIO_LOGIN;
+}
+function mostrarErroLogin(msg){
+  const el = document.getElementById("loginErro");
+  el.textContent = msg;
+  el.style.display = "block";
+}
+function limparErroLogin(){
+  document.getElementById("loginErro").style.display = "none";
+}
+const MENSAGENS_ERRO_LOGIN = {
+  "auth/invalid-credential": "Usuário ou senha incorretos.",
+  "auth/user-not-found": "Usuário não encontrado.",
+  "auth/wrong-password": "Senha incorreta.",
+  "auth/too-many-requests": "Muitas tentativas — espera um pouco e tenta de novo.",
+  "auth/invalid-email": "Usuário inválido.",
+  "auth/network-request-failed": "Sem conexão — verifica a internet e tenta de novo.",
+  "auth/configuration-not-found": "Login ainda não está configurado."
+};
+async function tentarEntrar(){
+  limparErroLogin();
+  const usuario = document.getElementById("loginUsuario").value.trim();
+  const senha = document.getElementById("loginSenha").value;
+  if(!usuario || !senha){ mostrarErroLogin("Preencha usuário e senha."); return; }
+  const btn = document.getElementById("btnLoginEntrar");
+  btn.disabled = true; btn.textContent = "Entrando…";
+  try {
+    await auth.signInWithEmailAndPassword(emailDoUsuario(usuario), senha);
+  } catch(e){
+    mostrarErroLogin(MENSAGENS_ERRO_LOGIN[e.code] || "Não deu pra entrar — tenta de novo.");
+  } finally {
+    btn.disabled = false; btn.textContent = "Entrar";
+  }
+}
+document.getElementById("btnLoginEntrar").addEventListener("click", tentarEntrar);
+document.getElementById("loginSenha").addEventListener("keydown", e => { if(e.key==="Enter") tentarEntrar(); });
+document.getElementById("loginUsuario").addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("loginSenha").focus(); });
+document.getElementById("btnSair").addEventListener("click", () => auth.signOut());
+
+auth.onAuthStateChanged(async (user) => {
+  const telaLogin = document.getElementById("telaLogin");
+  const appConteudo = document.getElementById("appConteudo");
+  if(!user){
+    telaLogin.style.display = "block";
+    appConteudo.style.display = "none";
+    document.getElementById("loginStatusRow").style.display = "none";
+    document.getElementById("loginSenha").value = "";
+    return;
+  }
+
+  const perfilSnap = await db.doc("usuarios/" + user.uid).get();
+  const perfil = perfilSnap.exists ? perfilSnap.data() : null;
+  if(!perfil || perfil.role !== "admin"){
+    telaLogin.style.display = "block";
+    appConteudo.style.display = "none";
+    mostrarErroLogin(perfil ? "Essa conta não tem acesso ao painel principal." : "Essa conta não tem perfil configurado. Fala com o administrador.");
+    await auth.signOut();
+    return;
+  }
+
+  document.getElementById("nomeLogado").textContent = perfil.nome || user.email;
+  document.getElementById("loginStatusRow").style.display = "flex";
+  telaLogin.style.display = "none";
+  appConteudo.style.display = "block";
+  iniciar();
+});
+
+const AVATAR_COLORS = ["#2451d6","#157a4a","#a85417","#7c3aed","#0f766e","#be185d","#4338ca","#b45309"];
+function corAvatar(nome){
+  let h = 0;
+  for(let i = 0; i < nome.length; i++) h = (h * 31 + nome.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function iniciais(nome){
+  const partes = nome.trim().split(/\s+/);
+  const a = partes[0] ? partes[0][0] : "";
+  const b = partes.length > 1 ? partes[partes.length - 1][0] : "";
+  return (a + b).toUpperCase();
+}
+
+// O banco não tem regras/validação (qualquer um com o link escreve) --
+// nome de funcionário/obra entra direto em innerHTML em alguns lugares,
+// então precisa ser escapado antes, ou um nome com "<"/">" vira HTML de
+// verdade pra quem estiver olhando a lista.
+function escapeHtml(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+let toastTimer = null;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
+}
+
+// Modal de confirmacao proprio, no lugar do confirm() nativo do navegador
+// (confirm()/alert() sao bloqueados silenciosamente em varios navegadores
+// embutidos — WhatsApp, Instagram etc. — e la o clique parecia "nao fazer
+// nada"). Uso: if(!(await confirmarAcao("Remover X?"))) return;
+let confirmResolver = null;
+function confirmarAcao(mensagem, textoBotao, estilo){
+  document.getElementById("confirm-texto").textContent = mensagem;
+  const btnOk = document.getElementById("confirm-ok");
+  btnOk.textContent = textoBotao || "Remover";
+  btnOk.className = "btn " + (estilo === "primary" ? "btn-primary" : "btn-danger");
+  document.getElementById("confirm-overlay").hidden = false;
+  return new Promise((resolve) => { confirmResolver = resolve; });
+}
+function fecharConfirmacao(resultado){
+  document.getElementById("confirm-overlay").hidden = true;
+  if(confirmResolver){ confirmResolver(resultado); confirmResolver = null; }
+}
+document.getElementById("confirm-ok").onclick = () => fecharConfirmacao(true);
+document.getElementById("confirm-cancelar").onclick = () => fecharConfirmacao(false);
+document.getElementById("confirm-overlay").addEventListener("click", (e) => {
+  if(e.target.id === "confirm-overlay") fecharConfirmacao(false);
+});
+
+const SEED = [];
+
+let todos = [];
+let filtro = "";
+let filtroStatus = "todos"; // "todos" | "Ativo" | "Inativo"
+let filtroObraSel = "todas"; // "todas" | "" (sem obra) | nome da obra
+let editandoId = null;
+
+function aplicarFiltro(){
+  const termo = filtro.trim().toLowerCase();
+  return todos.filter(f => {
+    if(filtroStatus !== "todos"){
+      const status = f.status === "Inativo" ? "Inativo" : "Ativo";
+      if(status !== filtroStatus) return false;
+    }
+    if(filtroObraSel !== "todas" && (f.obraPadrao || "") !== filtroObraSel) return false;
+    if(!termo) return true;
+    return (f.nome || "").toLowerCase().includes(termo) || (f.funcao || "").toLowerCase().includes(termo);
+  });
+}
+
+document.querySelectorAll(".stat-card.filtro").forEach((card) => {
+  card.addEventListener("click", () => {
+    filtroStatus = card.dataset.status;
+    document.querySelectorAll(".stat-card.filtro").forEach((c) => c.classList.toggle("active", c === card));
+    render();
+  });
+});
+
+// Chips de filtro por obra (a partir de f.obraPadrao) -- pura conveniencia
+// de leitura, igual o campo em si: nao restringe nada, so filtra a lista
+// exibida. Reconstruida a cada render() porque tanto OBRAS quanto as
+// contagens por obra podem mudar.
+function renderObraFiltro(){
+  const row = document.getElementById("obra-filtro-row");
+  const contagem = {};
+  let semObra = 0;
+  todos.forEach(f => {
+    if(f.obraPadrao){ contagem[f.obraPadrao] = (contagem[f.obraPadrao] || 0) + 1; }
+    else { semObra++; }
+  });
+  const nomesObra = OBRAS.filter(o => contagem[o]); // so mostra obra com gente de verdade
+  row.innerHTML = "";
+
+  const chipTodas = document.createElement("div");
+  chipTodas.className = "obra-filtro-chip" + (filtroObraSel === "todas" ? " active" : "");
+  chipTodas.style.cssText = "background:var(--surface-2);color:var(--ink);border-color:var(--line)";
+  chipTodas.innerHTML = `Todas as obras <span class="qtd">${todos.length}</span>`;
+  chipTodas.onclick = () => { filtroObraSel = "todas"; render(); };
+  row.appendChild(chipTodas);
+
+  nomesObra.forEach(nome => {
+    const cor = corAvatar(nome);
+    const chip = document.createElement("div");
+    chip.className = "obra-filtro-chip" + (filtroObraSel === nome ? " active" : "");
+    chip.style.cssText = `background:${cor}1a;border-color:${cor}55;color:${cor}`;
+    chip.innerHTML = `${escapeHtml(nome)} <span class="qtd">${contagem[nome]}</span>`;
+    chip.onclick = () => { filtroObraSel = nome; render(); };
+    row.appendChild(chip);
+  });
+
+  if(semObra){
+    const chipSem = document.createElement("div");
+    chipSem.className = "obra-filtro-chip" + (filtroObraSel === "" ? " active" : "");
+    chipSem.style.cssText = "background:var(--surface-2);color:var(--muted);border-color:var(--line)";
+    chipSem.innerHTML = `Sem obra <span class="qtd">${semObra}</span>`;
+    chipSem.onclick = () => { filtroObraSel = ""; render(); };
+    row.appendChild(chipSem);
+  }
+}
+
+function render(){
+  const lista = document.getElementById("lista");
+  const loading = document.getElementById("loading-state");
+  const empty = document.getElementById("empty-state");
+  loading.hidden = true;
+
+  const ativos = todos.filter(f => f.status !== "Inativo").length;
+  const inativos = todos.length - ativos;
+  document.getElementById("hero-total").textContent = todos.length;
+  document.getElementById("stat-total").textContent = todos.length;
+  document.getElementById("stat-ativos").textContent = ativos;
+  document.getElementById("stat-inativos").textContent = inativos;
+  renderObraFiltro();
+
+  const visiveis = aplicarFiltro();
+  lista.innerHTML = "";
+  empty.hidden = visiveis.length > 0;
+
+  visiveis.forEach(f => {
+    const row = document.createElement("div");
+    row.className = "emp-row";
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.style.background = corAvatar(f.nome || "?");
+    avatar.textContent = iniciais(f.nome || "?");
+
+    const info = document.createElement("div");
+    const nome = document.createElement("div");
+    nome.className = "emp-name";
+    nome.textContent = f.nome;
+    const funcao = document.createElement("div");
+    funcao.className = "emp-sub";
+    funcao.textContent = f.funcao || "—";
+    info.appendChild(nome);
+    info.appendChild(funcao);
+    if(f.obraPadrao){
+      const obraSub = document.createElement("div");
+      obraSub.className = "emp-sub";
+      obraSub.textContent = "Obra: " + f.obraPadrao;
+      info.appendChild(obraSub);
+    }
+
+    const pill = document.createElement("button");
+    pill.className = "pill " + (f.status === "Inativo" ? "pill-inativo" : "pill-ativo");
+    pill.textContent = f.status === "Inativo" ? "Inativo" : "Ativo";
+    pill.title = "Clique para alternar";
+    pill.onclick = () => alternarStatus(f);
+
+    const actions = document.createElement("div");
+    actions.className = "row-actions";
+    const editBtn = document.createElement("button");
+    editBtn.className = "icon-btn";
+    editBtn.title = "Editar";
+    editBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+    editBtn.onclick = () => abrirModal(f);
+    actions.appendChild(editBtn);
+
+    row.appendChild(avatar);
+    row.appendChild(info);
+    row.appendChild(pill);
+    row.appendChild(actions);
+    lista.appendChild(row);
+  });
+}
+
+async function alternarStatus(f){
+  const novo = f.status === "Inativo" ? "Ativo" : "Inativo";
+  const pergunta = novo === "Inativo"
+    ? "Marcar " + f.nome + " como Inativo?"
+    : "Marcar " + f.nome + " como Ativo de novo?";
+  const ok = await confirmarAcao(
+    pergunta,
+    novo === "Inativo" ? "Marcar Inativo" : "Marcar Ativo",
+    novo === "Inativo" ? "danger" : "primary"
+  );
+  if(!ok) return;
+  try {
+    await db.doc("funcionarios/" + f.id).update({ status: novo });
+    toast(f.nome + " agora está " + novo + ".");
+  } catch(e){
+    toast("Não deu pra salvar agora — tenta de novo.");
+  }
+}
+
+function abrirModal(f){
+  editandoId = f ? f.id : null;
+  document.getElementById("modal-title").textContent = f ? "Editar funcionário" : "Novo funcionário";
+  document.getElementById("modal-sub").textContent = f ? "Atualize os dados abaixo." : "Preencha os dados abaixo.";
+  document.getElementById("f-nome").value = f ? f.nome || "" : "";
+  document.getElementById("f-funcao").value = f ? f.funcao || "" : "";
+  const selObra = document.getElementById("f-obra");
+  const obraAtual = f ? f.obraPadrao || "" : "";
+  let optsObra = '<option value="">— nenhuma —</option>'
+    + OBRAS.map(o => `<option value="${o}">${o}</option>`).join("");
+  if(obraAtual && !OBRAS.includes(obraAtual)){
+    optsObra += `<option value="${obraAtual}">${obraAtual}</option>`;
+  }
+  selObra.innerHTML = optsObra;
+  selObra.value = obraAtual;
+  document.getElementById("f-pix").value = f ? f.pix || "" : "";
+  document.getElementById("f-status").value = f && f.status === "Inativo" ? "Inativo" : "Ativo";
+  document.getElementById("btn-excluir").hidden = !f;
+  document.getElementById("overlay").hidden = false;
+  document.getElementById("f-nome").focus();
+}
+function fecharModal(){
+  document.getElementById("overlay").hidden = true;
+  editandoId = null;
+}
+
+document.getElementById("btn-novo").onclick = () => abrirModal(null);
+document.getElementById("btn-cancelar").onclick = fecharModal;
+document.getElementById("overlay").addEventListener("click", (e) => {
+  if(e.target.id === "overlay") fecharModal();
+});
+
+document.getElementById("form-func").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const dados = {
+    nome: document.getElementById("f-nome").value.trim(),
+    funcao: document.getElementById("f-funcao").value.trim(),
+    obraPadrao: document.getElementById("f-obra").value,
+    pix: document.getElementById("f-pix").value.trim(),
+    status: document.getElementById("f-status").value
+  };
+  if(!dados.nome || !dados.funcao){ toast("Preencha nome e função."); return; }
+
+  // Trava contra duplicidade de cadastro (pedido do Rubens 10/09/2026,
+  // depois de "Leonardo Guimarães Vidal" ter sido cadastrado 2x). Compara
+  // o nome normalizado (sem espaços nas pontas, sem diferença de
+  // maiúscula) contra os outros funcionários -- não é bloqueio total (dois
+  // homônimos de verdade podem existir), só pede confirmação explícita.
+  const nomeNorm = dados.nome.trim().toLowerCase();
+  const jaExiste = todos.some(f => f.id !== editandoId && (f.nome || "").trim().toLowerCase() === nomeNorm);
+  if(jaExiste){
+    const ok = await confirmarAcao(
+      `Já existe um funcionário chamado "${dados.nome}" no cadastro. Cadastrar mesmo assim?`,
+      "Cadastrar mesmo assim", "primary"
+    );
+    if(!ok) return;
+  }
+
+  const btn = document.getElementById("btn-salvar");
+  btn.disabled = true;
+  try {
+    if(editandoId){
+      await db.doc("funcionarios/" + editandoId).update(dados);
+      toast("Funcionário atualizado.");
+    } else {
+      await db.collection("funcionarios").add(dados);
+      toast("Funcionário cadastrado.");
+    }
+    fecharModal();
+  } catch(err){
+    toast("Não deu pra salvar agora — tenta de novo.");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById("btn-excluir").onclick = async () => {
+  if(!editandoId) return;
+  if(!(await confirmarAcao("Remover este funcionário do cadastro?"))) return;
+  try {
+    await db.doc("funcionarios/" + editandoId).delete();
+    toast("Funcionário removido.");
+    fecharModal();
+  } catch(e){
+    toast("Não deu pra remover agora — tenta de novo.");
+  }
+};
+
+document.getElementById("busca").addEventListener("input", (e) => {
+  filtro = e.target.value;
+  render();
+});
+
+document.getElementById("btn-exportar").onclick = () => {
+  const linhas = [["Nome","Função","Chave PIX","Situação"]];
+  aplicarFiltro().forEach(f => linhas.push([f.nome||"", f.funcao||"", f.pix||"", f.status||"Ativo"]));
+  const csv = linhas.map(l => l.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(",")).join("\r\n");
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "equipe-campolina.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast("Relatório salvo.");
+};
+
+// NAO chamar mais automaticamente — so existe pra reaproveitar em caso de
+// precisar semear um banco realmente vazio de novo no futuro (ex: um novo
+// ambiente). Rodar manualmente pelo console se algum dia for preciso:
+// seedSeVazio(db.collection("funcionarios"))
+// Historico: em 02/09/2026 essa funcao rodava automaticamente em toda
+// carga de pagina, guardada por um "colRef.limit(1).get(); if(!snap.empty)
+// return;". Uma leitura que voltou vazia por engano (rede instavel/cache)
+// bastou pra recriar as 32 pessoas originais do SEED por cima das que ja
+// existiam — duplicou 30 cadastros e ressuscitou 2 que tinham sido
+// excluidos de proposito. Nunca mais chamar isso sozinho no carregamento.
+async function seedSeVazio(colRef){
+  const snap = await colRef.limit(1).get();
+  if(!snap.empty) return;
+  for(const f of SEED){
+    await colRef.add({ nome: f.nome, funcao: f.funcao, pix: f.pix, status: "Ativo" });
+  }
+}
+
+async function iniciar(){
+  const col = db.collection("funcionarios");
+
+  col.orderBy("nome").onSnapshot(
+    (snap) => {
+      todos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      render();
+    },
+    () => {
+      document.getElementById("loading-state").hidden = false;
+      document.getElementById("loading-state").textContent = "Não deu pra carregar a equipe agora.";
+    }
+  );
+
+  // carrega a lista de obras de cara (nao so quando a aba Obras e aberta)
+  // -- Conferencia e Fechamento dependem de OBRAS estar atualizada desde
+  // o inicio, senao mostram o OBRAS_SEED hardcoded (com "UBS", que ja
+  // nem existe mais) ate alguem clicar na aba Obras
+  carregarObras();
+}
+
+// ---------------- Conferência de Ponto (abas de mês + grade dia-a-dia) ----------------
+
+// so usado como fallback ate carregarObras() trazer a lista real do
+// Firestore, e pra semear um banco vazio na mao se algum dia precisar
+// (ver seedObrasSeVazio) -- "UBS" foi renomeada pra "COLÉGIO MILITAR"
+// em 02/09/2026, entao o fallback ja reflete isso
+const OBRAS_SEED = [];
+let OBRAS = OBRAS_SEED.slice(); // lista viva, atualizada pela colecao "obras"
+const MARCADORES = ["SÁBADO", "DOMINGO", "FERIADO", "FALTA"];
+const NOMES_MESES = ["JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO","DEZEMBRO"];
+const MES_INICIO = "2026-07";
+
+function mesAtualReal(){
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+}
+function somarMeses(mesStr, n){
+  const [ano, mes] = mesStr.split("-").map(Number);
+  const d = new Date(ano, mes - 1 + n, 1);
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+}
+function infoMes(mesStr){
+  const [ano, mes] = mesStr.split("-").map(Number);
+  const diasNoMes = new Date(ano, mes, 0).getDate();
+  const nome = NOMES_MESES[mes - 1];
+  const mm = String(mes).padStart(2, "0");
+  const dd = String(diasNoMes).padStart(2, "0");
+  return { nome, ano, diasNoMes, label: nome + " / " + ano, periodo: "01–" + dd + "/" + mm + "/" + ano };
+}
+function ehMarcador(v){ return MARCADORES.includes(v); }
+
+let mesConferencia = null;
+let listaMeses = [];
+let dadosMes = {}; // { funcId: { dias: {...}, statusConferencia: {q1,q2} } }
+let filtroConf = "";
+let filtroObraConf = "todas"; // "todas" | "" (sem obra) | nome da obra -- chips da Conferência de Ponto
+
+document.getElementById("seg-equipe").onclick = () => mostrarSegmento("equipe");
+document.getElementById("seg-conferencia").onclick = () => mostrarSegmento("conferencia");
+document.getElementById("seg-fechamento").onclick = () => mostrarSegmento("fechamento");
+document.getElementById("seg-obras").onclick = () => mostrarSegmento("obras");
+
+function mostrarSegmento(qual){
+  document.getElementById("seg-equipe").classList.toggle("active", qual === "equipe");
+  document.getElementById("seg-conferencia").classList.toggle("active", qual === "conferencia");
+  document.getElementById("seg-fechamento").classList.toggle("active", qual === "fechamento");
+  document.getElementById("seg-obras").classList.toggle("active", qual === "obras");
+  document.getElementById("view-equipe").hidden = qual !== "equipe";
+  document.getElementById("view-conferencia").hidden = qual !== "conferencia";
+  document.getElementById("view-fechamento").hidden = qual !== "fechamento";
+  document.getElementById("view-obras").hidden = qual !== "obras";
+  if(qual === "conferencia" && !mesConferencia) carregarMesTabs();
+  else if(qual === "fechamento"){
+    if(!listaMeses.length) listaMeses = calcularListaMeses();
+    popularFiltrosApontamentos();
+  }
+}
+
+// ---------------- Obras ----------------
+
+let todasObras = [];
+let filtroObras = "";
+let editandoObraId = null;
+
+// NAO chamar mais automaticamente — mesmo motivo do seedSeVazio() de
+// funcionarios (ver comentario lá): uma leitura vazia por engano recria
+// as obras originais em cima das que já existem, duplicando. Rodar na mão
+// pelo console só se precisar semear um banco realmente vazio:
+// seedObrasSeVazio(db.collection("obras"))
+async function seedObrasSeVazio(colRef){
+  const snap = await colRef.limit(1).get();
+  if(!snap.empty) return;
+  for(const nome of OBRAS_SEED){
+    await colRef.add({ nome });
+  }
+}
+
+function carregarObras(){
+  const col = db.collection("obras");
+  col.orderBy("nome").onSnapshot(
+    (snap) => {
+      todasObras = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      OBRAS = todasObras.map(o => o.nome);
+      renderObras();
+      renderObraFiltro();
+    },
+    () => {
+      document.getElementById("obras-loading-state").hidden = false;
+      document.getElementById("obras-loading-state").textContent = "Não deu pra carregar as obras agora.";
+    }
+  );
+}
+
+function renderObras(){
+  const lista = document.getElementById("obras-lista");
+  const loading = document.getElementById("obras-loading-state");
+  const empty = document.getElementById("obras-empty-state");
+  loading.hidden = true;
+
+  document.getElementById("obras-stat-total").textContent = todasObras.length;
+
+  const termo = filtroObras.trim().toLowerCase();
+  const visiveis = todasObras.filter(o => !termo || (o.nome || "").toLowerCase().includes(termo));
+  lista.innerHTML = "";
+  empty.hidden = visiveis.length > 0;
+
+  visiveis.forEach(o => {
+    const row = document.createElement("div");
+    row.className = "obra-row";
+
+    const dot = document.createElement("div");
+    dot.className = "obra-dot";
+    dot.style.background = corAvatar(o.nome || "?");
+
+    const nome = document.createElement("div");
+    nome.className = "obra-nome";
+    nome.textContent = o.nome;
+
+    const apontador = document.createElement("div");
+    apontador.className = "obra-apontador";
+    apontador.textContent = o.apontadorNome ? "Apontador: " + o.apontadorNome : "";
+
+    const actions = document.createElement("div");
+    actions.className = "row-actions";
+    const editBtn = document.createElement("button");
+    editBtn.className = "icon-btn";
+    editBtn.title = "Editar";
+    editBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+    editBtn.onclick = () => abrirModalObra(o);
+    actions.appendChild(editBtn);
+
+    row.appendChild(dot);
+    row.appendChild(nome);
+    row.appendChild(apontador);
+    row.appendChild(actions);
+    lista.appendChild(row);
+  });
+}
+
+function abrirModalObra(o){
+  editandoObraId = o ? o.id : null;
+  document.getElementById("obra-modal-title").textContent = o ? "Editar obra" : "Nova obra";
+  document.getElementById("f-obra-nome").value = o ? o.nome || "" : "";
+
+  // Apontador responsável -- só organizacional por enquanto (não trava
+  // nada, mesmo espírito do "obra padrão" do funcionário), sourced dos
+  // funcionários Ativos, ordenados por nome.
+  const selApontador = document.getElementById("f-obra-apontador");
+  selApontador.innerHTML = '<option value="">— Nenhum —</option>'
+    + todos.filter(f => f.status !== "Inativo")
+      .sort((a, b) => (a.nome||"").localeCompare(b.nome||"", "pt-BR"))
+      .map(f => `<option value="${f.id}">${escapeHtml(f.nome)}</option>`).join("");
+  selApontador.value = o && o.apontadorId ? o.apontadorId : "";
+
+  document.getElementById("btn-excluir-obra").hidden = !o;
+  document.getElementById("obra-overlay").hidden = false;
+  document.getElementById("f-obra-nome").focus();
+}
+function fecharModalObra(){
+  document.getElementById("obra-overlay").hidden = true;
+  editandoObraId = null;
+}
+
+document.getElementById("btn-nova-obra").onclick = () => abrirModalObra(null);
+document.getElementById("btn-cancelar-obra").onclick = fecharModalObra;
+document.getElementById("obra-overlay").addEventListener("click", (e) => {
+  if(e.target.id === "obra-overlay") fecharModalObra();
+});
+
+document.getElementById("form-obra").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const nome = document.getElementById("f-obra-nome").value.trim();
+  if(!nome){ toast("Preencha o nome da obra."); return; }
+
+  const apontadorId = document.getElementById("f-obra-apontador").value;
+  const apontadorFunc = apontadorId ? todos.find(f => f.id === apontadorId) : null;
+
+  const btn = document.getElementById("btn-salvar-obra");
+  btn.disabled = true;
+  try {
+    if(editandoObraId){
+      // FieldValue.delete() só é válido num update() -- aqui a obra já
+      // existe, então "— Nenhum —" precisa de fato apagar os campos.
+      const dadosObra = apontadorFunc
+        ? { nome, apontadorId, apontadorNome: apontadorFunc.nome }
+        : { nome, apontadorId: firebase.firestore.FieldValue.delete(), apontadorNome: firebase.firestore.FieldValue.delete() };
+      await db.doc("obras/" + editandoObraId).update(dadosObra);
+      toast("Obra atualizada.");
+    } else {
+      // Nova obra: add() faz um set() sem merge -- FieldValue.delete()
+      // não é permitido aqui, então simplesmente omite os campos quando
+      // nenhum apontador foi escolhido.
+      const dadosObra = apontadorFunc
+        ? { nome, apontadorId, apontadorNome: apontadorFunc.nome }
+        : { nome };
+      await db.collection("obras").add(dadosObra);
+      toast("Obra cadastrada.");
+    }
+    fecharModalObra();
+  } catch(err){
+    toast("Não deu pra salvar agora — tenta de novo.");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById("btn-excluir-obra").onclick = async () => {
+  if(!editandoObraId) return;
+  if(!(await confirmarAcao("Remover esta obra da lista? Lançamentos já feitos com ela não são apagados."))) return;
+  try {
+    await db.doc("obras/" + editandoObraId).delete();
+    toast("Obra removida.");
+    fecharModalObra();
+  } catch(e){
+    toast("Não deu pra remover agora — tenta de novo.");
+  }
+};
+
+document.getElementById("obras-busca").addEventListener("input", (e) => {
+  filtroObras = e.target.value;
+  renderObras();
+});
+
+function calcularListaMeses(){
+  const atual = mesAtualReal();
+  const limite = somarMeses(atual, 4);
+  const meses = [];
+  let cursor = MES_INICIO;
+  while(cursor <= limite){
+    meses.push(cursor);
+    cursor = somarMeses(cursor, 1);
+  }
+  return meses;
+}
+
+function carregarMesTabs(){
+  listaMeses = calcularListaMeses();
+  renderMesTabs(mesAtualReal());
+  selecionarMes(mesAtualReal());
+}
+
+// Cards de mes da Conferencia de Ponto (fileira grande, com chave AAAA-MM
+// e pill Atual/Proximo/Encerrado). A aba "Banco de Dados" tem sua propria
+// grade de cards (renderBancoMesesGrid, visual de mini-calendario) --
+// ambas compartilham o mesmo mesConferencia/listaMeses.
+function renderMesTabs(atual){
+  const cont = document.getElementById("mes-tabs");
+  if(!cont) return;
+  cont.innerHTML = "";
+  listaMeses.forEach(mes => {
+    const { label } = infoMes(mes);
+    const tab = document.createElement("div");
+    tab.className = "mes-tab" + (mes === mesConferencia ? " selected" : "");
+    const nomeDiv = document.createElement("div");
+    nomeDiv.className = "mes-tab-nome";
+    nomeDiv.textContent = label;
+    const chaveDiv = document.createElement("div");
+    chaveDiv.className = "mes-tab-chave";
+    chaveDiv.textContent = mes;
+    const pill = document.createElement("span");
+    let classe = "mes-pill-futuro", texto = "PRÓXIMO";
+    if(mes === atual){ classe = "mes-pill-atual"; texto = "MÊS ATUAL"; }
+    else if(mes < atual){ classe = "mes-pill-encerrado"; texto = "ENCERRADO"; }
+    pill.className = "mes-pill " + classe;
+    pill.textContent = texto;
+    tab.appendChild(nomeDiv);
+    tab.appendChild(chaveDiv);
+    tab.appendChild(pill);
+    tab.onclick = () => selecionarMes(mes);
+    cont.appendChild(tab);
+  });
+}
+
+const DIAS_SEMANA_ABREV = ["D","S","T","Q","Q","S","S"];
+
+async function selecionarMes(mes){
+  mesConferencia = mes;
+  renderMesTabs(mesAtualReal());
+
+  const loading = document.getElementById("conf-loading-state");
+  loading.hidden = false;
+  loading.textContent = "Carregando período…";
+  document.getElementById("conf-lista").innerHTML = "";
+
+  dadosMes = {};
+  try {
+    await Promise.all(todos.map(async f => {
+      const snap = await db.doc("funcionarios/" + f.id + "/pontos/" + mes).get();
+      dadosMes[f.id] = snap.exists ? snap.data() : { dias: {}, statusConferencia: { q1: "Pendente", q2: "Pendente" } };
+    }));
+  } catch(e){
+    loading.textContent = "Não deu pra carregar esse período agora.";
+    return;
+  }
+  loading.hidden = true;
+  carregarContagemDivergencias();
+  renderConfLista();
+}
+
+// Contagem de divergencias abertas por funcionario, pro badge na lista da
+// Conferencia de Ponto (11/09/2026). Best-effort: uma query collection
+// group precisa de um indice que nao existe por padrao no Firestore -- se
+// a query falhar (indice ainda nao criado no console), so nao mostra o
+// badge, sem quebrar o resto da tela. Nao bloqueia renderConfLista() (roda
+// em paralelo, re-renderiza sozinha quando termina).
+let divergenciasAbertasPorFunc = {};
+async function carregarContagemDivergencias(){
+  try {
+    const snap = await db.collectionGroup("divergencias").where("status", "==", "Aberta").get();
+    const contagem = {};
+    snap.docs.forEach(d => {
+      const data = d.data();
+      if(data.mes !== mesConferencia) return;
+      const funcId = d.ref.parent.parent.id;
+      contagem[funcId] = (contagem[funcId] || 0) + 1;
+    });
+    divergenciasAbertasPorFunc = contagem;
+  } catch(e){
+    divergenciasAbertasPorFunc = {};
+  }
+  renderConfLista();
+}
+
+// ---------------- "Banco de Dados" (antiga aba "Fechamento de Ponto") ----------------
+// Ficou vazia numa limpeza em 03/09/2026 (removido o antigo conteudo de
+// aprovacao de pagamento por obra e a trava de mes fechado/reabrir -- ver
+// CLAUDE.md), depois virou a tela "Apontamentos": consulta os dias
+// lancados de UM funcionario num mes, com filtro opcional de obra.
+// Independente do mesConferencia/dadosMes da Conferencia de Ponto -- os
+// filtros aqui (funcionario/obra/periodo) sao proprios dessa tela,
+// consultados sob demanda no botao "Consultar", sem ficar sincronizados
+// com a outra aba.
+
+function popularFiltrosApontamentos(){
+  const selFunc = document.getElementById("apont-funcionario");
+  const selObra = document.getElementById("apont-obra");
+  const selPeriodo = document.getElementById("apont-periodo");
+  if(!selFunc || !selObra || !selPeriodo) return;
+
+  const funcAtual = selFunc.value;
+  selFunc.innerHTML = '<option value="">Selecione…</option>'
+    + todos.filter(f => f.status !== "Inativo")
+      .sort((a, b) => (a.nome||"").localeCompare(b.nome||"", "pt-BR"))
+      .map(f => `<option value="${f.id}">${escapeHtml(f.nome)}</option>`).join("");
+  if(funcAtual) selFunc.value = funcAtual;
+
+  const obraAtual = selObra.value;
+  selObra.innerHTML = '<option value="">Todas</option>'
+    + OBRAS.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join("");
+  if(obraAtual) selObra.value = obraAtual;
+
+  const periodoAtual = selPeriodo.value;
+  selPeriodo.innerHTML = listaMeses.map(mes => {
+    const { label } = infoMes(mes);
+    return `<option value="${mes}">${label}</option>`;
+  }).join("");
+  selPeriodo.value = periodoAtual && listaMeses.includes(periodoAtual) ? periodoAtual : mesAtualReal();
+
+  popularDiasApontamentos();
+}
+
+// Dia depende do periodo escolhido (mes tem 28 a 31 dias) -- repopula toda
+// vez que o periodo muda, mantendo o dia selecionado se ainda for valido.
+function popularDiasApontamentos(){
+  const selPeriodo = document.getElementById("apont-periodo");
+  const selDia = document.getElementById("apont-dia");
+  if(!selPeriodo || !selDia || !selPeriodo.value) return;
+  const diaAtual = selDia.value;
+  const { diasNoMes } = infoMes(selPeriodo.value);
+  selDia.innerHTML = '<option value="">Todos os dias</option>'
+    + Array.from({ length: diasNoMes }, (_, i) => i + 1)
+      .map(d => `<option value="${d}">${String(d).padStart(2, "0")}</option>`).join("");
+  if(diaAtual && Number(diaAtual) <= diasNoMes) selDia.value = diaAtual;
+}
+document.getElementById("apont-periodo").addEventListener("change", popularDiasApontamentos);
+
+document.getElementById("btn-apont-consultar").onclick = consultarApontamentos;
+
+async function consultarApontamentos(){
+  const funcId = document.getElementById("apont-funcionario").value;
+  const obraFiltro = document.getElementById("apont-obra").value;
+  const mes = document.getElementById("apont-periodo").value;
+  const diaFiltro = document.getElementById("apont-dia").value;
+  const cont = document.getElementById("apont-resultado");
+
+  if(!funcId){
+    if(diaFiltro){
+      await renderApontResultadoPorDia(diaFiltro, mes, obraFiltro);
+    } else if(obraFiltro){
+      await renderApontResultadoPorObra(obraFiltro, mes);
+    } else {
+      cont.innerHTML = '<div class="empty-state">Selecione um funcionário, uma obra ou um dia pra consultar.</div>';
+    }
+    return;
+  }
+  const f = todos.find(x => x.id === funcId);
+  if(!f) return;
+
+  cont.innerHTML = '<div class="loading-state">Consultando…</div>';
+  let info;
+  try {
+    const snap = await db.doc("funcionarios/" + funcId + "/pontos/" + mes).get();
+    info = snap.exists ? snap.data() : { dias: {} };
+  } catch(e){
+    cont.innerHTML = '<div class="empty-state">Não deu pra consultar agora — tenta de novo.</div>';
+    return;
+  }
+  renderApontResultado(f, mes, info, obraFiltro);
+}
+
+// Classifica cada dia do mes em D (dia inteiro) / M (manha) / T (tarde) /
+// F (falta) / vazio (sem lancamento), aplicando o filtro de obra -- um
+// periodo (manha ou tarde) so "conta" se bater com a obra escolhida;
+// marcadores (FALTA/SABADO/DOMINGO/FERIADO) continuam valendo mesmo com
+// filtro de obra ativo, ja que nao sao obra. Quando manha e tarde tem
+// obras REAIS diferentes no mesmo dia, mostra as duas separadas por "/"
+// em vez de inventar um estado "transferido".
+function renderApontResultado(f, mes, info, obraFiltro){
+  const cont = document.getElementById("apont-resultado");
+  const { diasNoMes, label } = infoMes(mes);
+  const [anoNum, mesNum] = mes.split("-").map(Number);
+  const NOMES_DIAS_SEMANA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+
+  const dias = [];
+  const porObra = {};
+  let diasInteiros = 0, meiosPeriodos = 0, faltas = 0;
+
+  for(let dia = 1; dia <= diasNoMes; dia++){
+    const wd = new Date(anoNum, mesNum - 1, dia).getDay();
+    const diaObj = (info.dias || {})[dia] || {};
+    const m = diaObj.m || "";
+    const t = diaObj.t || "";
+
+    const mVale = !obraFiltro || !m || ehMarcador(m) || m === obraFiltro;
+    const tVale = !obraFiltro || !t || ehMarcador(t) || t === obraFiltro;
+    const mReal = (mVale && m && !ehMarcador(m)) ? m : "";
+    const tReal = (tVale && t && !ehMarcador(t)) ? t : "";
+    const temFalta = (mVale && m === "FALTA") || (tVale && t === "FALTA");
+
+    let valor = 0;
+    const obrasDoDia = [];
+    if(mReal){ valor += 0.5; obrasDoDia.push(mReal); porObra[mReal] = (porObra[mReal] || 0) + 0.5; }
+    if(tReal){ valor += 0.5; obrasDoDia.push(tReal); porObra[tReal] = (porObra[tReal] || 0) + 0.5; }
+
+    let tipo, obraLabel;
+    if(valor === 1){
+      tipo = "d";
+      obraLabel = obrasDoDia[0] === obrasDoDia[1] ? obrasDoDia[0] : obrasDoDia.join(" / ");
+      diasInteiros++;
+    } else if(valor === 0.5){
+      tipo = mReal ? "m" : "t";
+      obraLabel = obrasDoDia[0];
+      meiosPeriodos++;
+    } else if(temFalta){
+      tipo = "f";
+      obraLabel = "—";
+      faltas++;
+    } else {
+      tipo = "vazio";
+      obraLabel = "—";
+    }
+
+    dias.push({ dia, semana: NOMES_DIAS_SEMANA[wd], tipo, obraLabel, valor });
+  }
+
+  const totalDiarias = diasInteiros + meiosPeriodos * 0.5;
+
+  const statusClasse = f.status === "Inativo" ? "status-inativo" : "status-ativo";
+  const resumoHtml = `
+    <div class="apont-resumo-func">
+      <div class="avatar" style="background:${corAvatar(f.nome||"?")}">${escapeHtml(iniciais(f.nome||"?"))}</div>
+      <div class="apont-resumo-info">
+        <div class="apont-resumo-nome">${escapeHtml(f.nome)}</div>
+        <div class="apont-resumo-sub">Função: ${escapeHtml(f.funcao || "—")} &nbsp;|&nbsp; Situação: <span class="${statusClasse}">${escapeHtml(f.status || "Ativo")}</span></div>
+      </div>
+      <div class="apont-mini-stats">
+        <div class="apont-mini-stat">
+          <div class="num">${diasInteiros}</div>
+          <div class="lbl">Dias inteiros</div>
+          <div class="sub">(1,0)</div>
+        </div>
+        <div class="apont-mini-stat">
+          <div class="num">${meiosPeriodos}</div>
+          <div class="lbl">Meio período</div>
+          <div class="sub">(0,5)</div>
+        </div>
+        <div class="apont-mini-stat">
+          <div class="num">${faltas}</div>
+          <div class="lbl">Faltas</div>
+          <div class="sub">(0,0)</div>
+        </div>
+        <div class="apont-mini-stat total">
+          <div class="num">${totalDiarias.toFixed(1)}</div>
+          <div class="lbl">Total no mês</div>
+        </div>
+      </div>
+    </div>`;
+
+  const celDia = dias.map(d => `<div>${String(d.dia).padStart(2,"0")}</div>`).join("");
+  const celSemana = dias.map(d => `<div>${d.semana}</div>`).join("");
+  const celObra = dias.map(d => `<div>${d.tipo === "vazio" ? "–" : escapeHtml(d.obraLabel)}</div>`).join("");
+  const rotuloPeriodo = { d: "D", m: "M", t: "T", f: "F", vazio: "–" };
+  const celPeriodo = dias.map(d => `<div class="cel-periodo tipo-${d.tipo}">${rotuloPeriodo[d.tipo]}</div>`).join("");
+
+  const gradeHtml = `
+    <div class="apont-grade-titulo">Apontamentos — ${label}</div>
+    <div class="apont-grade-wrap">
+      <div class="apont-grade-row"><div class="apont-grade-rotulo">Dia</div>${celDia}</div>
+      <div class="apont-grade-row"><div class="apont-grade-rotulo"></div>${celSemana}</div>
+      <div class="apont-grade-row"><div class="apont-grade-rotulo">Obra</div>${celObra}</div>
+      <div class="apont-grade-row"><div class="apont-grade-rotulo">Período</div>${celPeriodo}</div>
+    </div>
+    <div class="apont-legenda">
+      <span><span class="dot" style="background:var(--good-bg)"></span>D = Dia inteiro (1,0)</span>
+      <span><span class="dot" style="background:var(--warn-bg)"></span>M = Manhã (0,5)</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--accent) 30%, transparent)"></span>T = Tarde (0,5)</span>
+      <span><span class="dot" style="background:color-mix(in srgb, var(--danger-ink) 30%, transparent)"></span>F = Falta (0,0)</span>
+      <span><span class="dot" style="background:var(--surface-2)"></span>– = Sem lançamento</span>
+    </div>`;
+
+  const rotuloPeriodoLongo = { d: "Dia inteiro", m: "Manhã", t: "Tarde", f: "Falta" };
+  const linhasDetalhe = dias.filter(d => d.tipo !== "vazio").map(d => {
+    const dataStr = String(d.dia).padStart(2,"0") + "/" + String(mesNum).padStart(2,"0") + "/" + anoNum;
+    return `<div class="apont-detalhe-row">
+      <div>${dataStr}</div>
+      <div>${escapeHtml(d.obraLabel)}</div>
+      <div><span class="apont-periodo-tag tipo-${d.tipo}">${rotuloPeriodoLongo[d.tipo]}</span></div>
+      <div class="valor">${d.valor.toFixed(1)}</div>
+    </div>`;
+  }).join("") || '<div class="empty-state" style="padding:20px 0;">Nenhum lançamento nesse período.</div>';
+
+  const obrasOrdenadas = Object.keys(porObra).sort((a,b) => a.localeCompare(b, "pt-BR"));
+  const linhasObra = obrasOrdenadas.map(o => {
+    const totalObra = porObra[o];
+    return `<div class="apont-obra-row"><div>${escapeHtml(o)}</div><div>${totalObra.toFixed(1)}</div></div>`;
+  }).join("") || '<div class="empty-state" style="padding:20px 0;">Sem lançamentos.</div>';
+  const totalObraRow = obrasOrdenadas.length
+    ? `<div class="apont-obra-row total"><div>Total</div><div>${totalDiarias.toFixed(1)}</div></div>`
+    : "";
+
+  const baixoHtml = `
+    <div class="apont-baixo">
+      <div class="apont-card">
+        <h3>Lançamentos detalhados</h3>
+        ${linhasDetalhe}
+      </div>
+      <div>
+        <div class="apont-card" style="margin-bottom:16px;">
+          <h3>Resumo por obra</h3>
+          <div class="apont-obra-row" style="font-weight:700; color:var(--muted); font-size:11px; text-transform:uppercase;">
+            <div>Obra</div><div>Dias</div>
+          </div>
+          ${linhasObra}
+          ${totalObraRow}
+        </div>
+        <div class="apont-card">
+          <h3>Observações</h3>
+          <ul class="apont-obs">
+            <li>D = dia inteiro (1,0) · M = manhã (0,5) · T = tarde (0,5) · F = falta (0,0)</li>
+            <li>Um dia pode ter obras diferentes de manhã e de tarde — as duas aparecem separadas por "/".</li>
+            <li>Falta é marcada no mesmo seletor de obra do dia, dentro do Cartão.</li>
+            <li>Pra editar um lançamento, abra o Cartão do funcionário na Conferência de Ponto.</li>
+          </ul>
+        </div>
+      </div>
+    </div>`;
+
+  cont.innerHTML = resumoHtml + gradeHtml + baixoHtml;
+}
+
+// Consulta agregada por obra (14/09/2026), sem escolher um funcionario --
+// pedido do Rubens depois de ver que o filtro de Obra so estreitava o
+// dropdown de Funcionario em vez de listar todo mundo daquela obra de uma
+// vez. Busca pontos/{mes} de todo mundo (Ativo) em paralelo -- mesmo padrao
+// ja usado em selecionarMes() da Conferencia de Ponto -- e soma 0,5 por
+// periodo (manha ou tarde) que bate exatamente com a obra escolhida (nao
+// usa obraPadrao do cadastro, que e so um default e pode estar desatualizado
+// -- conta o que foi realmente lancado no mes).
+async function renderApontResultadoPorObra(obraFiltro, mes){
+  const cont = document.getElementById("apont-resultado");
+  cont.innerHTML = '<div class="loading-state">Consultando…</div>';
+  const { label } = infoMes(mes);
+
+  const candidatos = todos.filter(f => f.status !== "Inativo");
+  let linhas;
+  try {
+    const resultados = await Promise.all(candidatos.map(async f => {
+      const snap = await db.doc("funcionarios/" + f.id + "/pontos/" + mes).get();
+      const dias = snap.exists ? (snap.data().dias || {}) : {};
+      let total = 0;
+      Object.values(dias).forEach(d => {
+        if(!d) return;
+        if(d.m === obraFiltro) total += 0.5;
+        if(d.t === obraFiltro) total += 0.5;
+      });
+      return { f, total };
+    }));
+    linhas = resultados.filter(r => r.total > 0).sort((a, b) => b.total - a.total);
+  } catch(e){
+    cont.innerHTML = '<div class="empty-state">Não deu pra consultar agora — tenta de novo.</div>';
+    return;
+  }
+
+  const totalGeral = linhas.reduce((soma, r) => soma + r.total, 0);
+  const cor = corAvatar(obraFiltro);
+
+  const resumoHtml = `
+    <div class="apont-resumo-func">
+      <div class="apont-resumo-info">
+        <div class="apont-resumo-nome" style="color:${cor}">${escapeHtml(obraFiltro)}</div>
+        <div class="apont-resumo-sub">${label}</div>
+      </div>
+      <div class="apont-mini-stats">
+        <div class="apont-mini-stat">
+          <div class="num">${linhas.length}</div>
+          <div class="lbl">Pessoas</div>
+        </div>
+        <div class="apont-mini-stat total">
+          <div class="num">${totalGeral.toFixed(1)}</div>
+          <div class="lbl">Total de dias</div>
+        </div>
+      </div>
+    </div>`;
+
+  const linhasHtml = linhas.length
+    ? linhas.map(({ f, total }) => `
+      <div class="apont-pessoa-row" data-func-id="${f.id}">
+        <div>
+          <div class="nome">${escapeHtml(f.nome)}</div>
+          <div class="funcao">${escapeHtml(f.funcao || "—")}</div>
+        </div>
+        <div class="dias">${total.toFixed(1)}</div>
+      </div>`).join("")
+    : '<div class="empty-state" style="padding:20px 0;">Ninguém trabalhou nessa obra nesse período.</div>';
+
+  cont.innerHTML = resumoHtml + `
+    <div class="apont-card" style="margin-top:20px;">
+      <h3>Funcionários em ${escapeHtml(obraFiltro)} — ${label}</h3>
+      <div class="apont-pessoa-row cabecalho"><div>Funcionário</div><div>Dias</div></div>
+      ${linhasHtml}
+    </div>`;
+
+  cont.querySelectorAll(".apont-pessoa-row[data-func-id]").forEach(row => {
+    row.onclick = () => {
+      document.getElementById("apont-funcionario").value = row.dataset.funcId;
+      consultarApontamentos();
+    };
+  });
+}
+
+// Consulta agregada por DIA (14/09/2026) -- pedido do Rubens ("PRECISO SABER
+// QUEM TRABALHOU DIA 11"): mesmo padrao de renderApontResultadoPorObra, mas
+// olhando so um dia especifico de todo mundo em vez do mes inteiro de uma
+// obra. Agrupa por obra (uma pessoa pode aparecer em duas obras diferentes
+// no mesmo dia, se manha e tarde forem obras distintas) + uma lista separada
+// de faltas + contagem de quem nao tem lancamento nesse dia. Se `obraFiltro`
+// tambem estiver marcado, filtra pra só essa obra (esconde faltas/sem
+// lançamento, que não fazem sentido combinados com obra).
+async function renderApontResultadoPorDia(dia, mes, obraFiltro){
+  const cont = document.getElementById("apont-resultado");
+  cont.innerHTML = '<div class="loading-state">Consultando…</div>';
+  const { label } = infoMes(mes);
+  const [anoNum, mesNum] = mes.split("-").map(Number);
+  const NOMES_DIAS_SEMANA = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+  const wd = new Date(anoNum, mesNum - 1, Number(dia)).getDay();
+  const dataLabel = String(dia).padStart(2, "0") + "/" + String(mesNum).padStart(2, "0") + "/" + anoNum;
+
+  const candidatos = todos.filter(f => f.status !== "Inativo");
+  const porObra = {};
+  const faltas = [];
+  const workedIds = new Set();
+  let semLancamento = 0;
+
+  try {
+    await Promise.all(candidatos.map(async f => {
+      const snap = await db.doc("funcionarios/" + f.id + "/pontos/" + mes).get();
+      const diaObj = snap.exists ? (snap.data().dias || {})[dia] : null;
+      const m = diaObj ? diaObj.m || "" : "";
+      const t = diaObj ? diaObj.t || "" : "";
+      const mReal = m && !ehMarcador(m) ? m : "";
+      const tReal = t && !ehMarcador(t) ? t : "";
+      const mFalta = m === "FALTA";
+      const tFalta = t === "FALTA";
+
+      if(mReal && (!obraFiltro || mReal === obraFiltro)){
+        (porObra[mReal] = porObra[mReal] || []).push({ f, periodo: mReal === tReal ? "dia inteiro" : "manhã" });
+        workedIds.add(f.id);
+      }
+      if(tReal && tReal !== mReal && (!obraFiltro || tReal === obraFiltro)){
+        (porObra[tReal] = porObra[tReal] || []).push({ f, periodo: "tarde" });
+        workedIds.add(f.id);
+      }
+      if(!obraFiltro){
+        if(mFalta || tFalta){
+          faltas.push({ f, periodo: mFalta && tFalta ? "dia inteiro" : (mFalta ? "manhã" : "tarde") });
+        } else if(!mReal && !tReal){
+          semLancamento++;
+        }
+      }
+    }));
+  } catch(e){
+    cont.innerHTML = '<div class="empty-state">Não deu pra consultar agora — tenta de novo.</div>';
+    return;
+  }
+
+  const tagClasse = { "dia inteiro": "tipo-d", "manhã": "tipo-m", "tarde": "tipo-t" };
+  const tagRotulo = { "dia inteiro": "D", "manhã": "M", "tarde": "T" };
+
+  const obrasOrdenadas = Object.keys(porObra).sort((a, b) => porObra[b].length - porObra[a].length);
+  const linhaPessoa = ({ f, periodo }, tag) => `
+    <div class="apont-pessoa-row" data-func-id="${f.id}">
+      <div>
+        <div class="nome">${escapeHtml(f.nome)}</div>
+        <div class="funcao">${escapeHtml(f.funcao || "—")}${tag === "F" && periodo !== "dia inteiro" ? " · falta " + periodo : ""}</div>
+      </div>
+      <div style="text-align:right"><span class="apont-periodo-tag ${tag === "F" ? "tipo-f" : tagClasse[periodo]}">${tag || tagRotulo[periodo]}</span></div>
+    </div>`;
+
+  const resumoHtml = `
+    <div class="apont-resumo-func">
+      <div class="apont-resumo-info">
+        <div class="apont-resumo-nome">Dia ${dataLabel}${obraFiltro ? " · " + escapeHtml(obraFiltro) : ""}</div>
+        <div class="apont-resumo-sub">${NOMES_DIAS_SEMANA[wd]} — ${label}</div>
+      </div>
+      <div class="apont-mini-stats">
+        <div class="apont-mini-stat total">
+          <div class="num">${workedIds.size}</div>
+          <div class="lbl">Trabalharam</div>
+        </div>
+        ${!obraFiltro ? `
+        <div class="apont-mini-stat">
+          <div class="num">${faltas.length}</div>
+          <div class="lbl">Faltas</div>
+        </div>
+        <div class="apont-mini-stat">
+          <div class="num">${semLancamento}</div>
+          <div class="lbl">Sem lançamento</div>
+        </div>` : ""}
+      </div>
+    </div>`;
+
+  const cardsObra = obrasOrdenadas.map(obra => `
+    <div class="apont-card" style="margin-top:16px;">
+      <h3 style="color:${corAvatar(obra)}">${escapeHtml(obra)} <span style="font-weight:400;color:var(--muted);font-size:12px">(${porObra[obra].length})</span></h3>
+      ${porObra[obra].slice().sort((a,b) => (a.f.nome||"").localeCompare(b.f.nome||"", "pt-BR")).map(item => linhaPessoa(item)).join("")}
+    </div>`).join("") || (!obraFiltro ? "" : '<div class="empty-state" style="padding:20px 0;">Ninguém trabalhou nessa obra nesse dia.</div>');
+
+  const cardFaltas = (!obraFiltro && faltas.length) ? `
+    <div class="apont-card" style="margin-top:16px;">
+      <h3 style="color:var(--danger-ink)">Faltas <span style="font-weight:400;color:var(--muted);font-size:12px">(${faltas.length})</span></h3>
+      ${faltas.slice().sort((a,b) => (a.f.nome||"").localeCompare(b.f.nome||"", "pt-BR")).map(item => linhaPessoa(item, "F")).join("")}
+    </div>` : "";
+
+  cont.innerHTML = resumoHtml + cardsObra + cardFaltas;
+
+  cont.querySelectorAll(".apont-pessoa-row[data-func-id]").forEach(row => {
+    row.onclick = () => {
+      document.getElementById("apont-funcionario").value = row.dataset.funcId;
+      consultarApontamentos();
+    };
+  });
+}
+
+// Status de conferencia agora e guardado por quinzena: statusConferencia
+// vira {q1, q2} em vez de uma string unica pro mes inteiro. Documentos
+// gravados antes de 03/09/2026 ainda tem statusConferencia como string --
+// lida aqui como fallback pras duas quinzenas, ate alguem togglear alguma
+// (dai vira objeto {q1,q2} de verdade, sem precisar migrar nada em lote).
+function statusQuinzena(info, quinzena){
+  const sc = (info || {}).statusConferencia;
+  if(sc && typeof sc === "object") return sc["q" + quinzena] === "Conferido" ? "Conferido" : "Pendente";
+  return sc === "Conferido" ? "Conferido" : "Pendente";
+}
+function quinzenaDoDia(dia){ return dia <= 15 ? 1 : 2; }
+// Achado da análise de confiabilidade: "Conferido" era um selo manual sem
+// nenhum vínculo com os dados -- editar um dia depois de conferir a
+// quinzena deixava o cartão "aprovado" com dado desatualizado. Qualquer
+// edição real de dia devolve a quinzena correspondente pra Pendente. Grava
+// sempre o objeto {q1,q2} inteiro (nunca um dot-path em cima de
+// statusConferencia), mesmo motivo de alternarConferencia() abaixo.
+function invalidarConferenciaPatch(info, dia){
+  const q = quinzenaDoDia(dia);
+  return {
+    q1: q === 1 ? "Pendente" : statusQuinzena(info, 1),
+    q2: q === 2 ? "Pendente" : statusQuinzena(info, 2),
+  };
+}
+// "Conferido" no resumo do mes (lista/stats) exige as duas quinzenas conferidas
+function statusMesConferido(info){
+  return statusQuinzena(info, 1) === "Conferido" && statusQuinzena(info, 2) === "Conferido";
+}
+
+// Conferência pelo funcionário (11/09/2026, a partir de um protótipo que o
+// Rubens mandou pra análise) -- mesmo mecanismo de statusConferencia, mas
+// é o PRÓPRIO funcionário quem marca (via cartoes.html), independente da
+// conferência administrativa. Mesmo shape {q1,q2}, mesma invalidação: editar
+// qualquer dia da quinzena devolve a concordância pra "Pendente" também,
+// exatamente como já acontece com statusConferencia.
+function concordanciaQuinzena(info, quinzena){
+  const cc = (info || {}).concordanciaFuncionario;
+  return cc && cc["q" + quinzena] === "Concordou" ? "Concordou" : "Pendente";
+}
+function invalidarConcordanciaPatch(info, dia){
+  const q = quinzenaDoDia(dia);
+  return {
+    q1: q === 1 ? "Pendente" : concordanciaQuinzena(info, 1),
+    q2: q === 2 ? "Pendente" : concordanciaQuinzena(info, 2),
+  };
+}
+// Usado pra decidir se um funcionario Inativo ainda deve aparecer na
+// conferencia de um mes especifico -- true so quando existe pelo menos um
+// periodo com obra de verdade lancada (nao marcador, nao vazio).
+function temLancamentoReal(info){
+  const dias = (info || {}).dias || {};
+  return Object.values(dias).some(d => {
+    const m = d && d.m, t = d && d.t;
+    return (m && !ehMarcador(m)) || (t && !ehMarcador(t));
+  });
+}
+
+// Chips de filtro por obra da Conferência de Ponto -- mesma aparência e
+// mesmo critério (obra padrão do cadastro) dos chips da Lista de
+// Funcionários. `elegiveis` é o conjunto que a conferência considera
+// (ativos + inativos com lançamento real no mês).
+function renderConfObraFiltro(elegiveis){
+  const row = document.getElementById("conf-obra-filtro-row");
+  if(!row) return;
+  const contagem = {};
+  let semObra = 0;
+  elegiveis.forEach(f => {
+    if(f.obraPadrao){ contagem[f.obraPadrao] = (contagem[f.obraPadrao] || 0) + 1; }
+    else { semObra++; }
+  });
+  const nomesObra = OBRAS.filter(o => contagem[o]);
+  row.innerHTML = "";
+
+  const chipTodas = document.createElement("div");
+  chipTodas.className = "obra-filtro-chip" + (filtroObraConf === "todas" ? " active" : "");
+  chipTodas.style.cssText = "background:var(--surface-2);color:var(--ink);border-color:var(--line)";
+  chipTodas.innerHTML = `Todas as obras <span class="qtd">${elegiveis.length}</span>`;
+  chipTodas.onclick = () => { filtroObraConf = "todas"; renderConfLista(); };
+  row.appendChild(chipTodas);
+
+  nomesObra.forEach(nome => {
+    const cor = corAvatar(nome);
+    const chip = document.createElement("div");
+    chip.className = "obra-filtro-chip" + (filtroObraConf === nome ? " active" : "");
+    chip.style.cssText = `background:${cor}1a;border-color:${cor}55;color:${cor}`;
+    chip.innerHTML = `${escapeHtml(nome)} <span class="qtd">${contagem[nome]}</span>`;
+    chip.onclick = () => { filtroObraConf = nome; renderConfLista(); };
+    row.appendChild(chip);
+  });
+
+  if(semObra){
+    const chipSem = document.createElement("div");
+    chipSem.className = "obra-filtro-chip" + (filtroObraConf === "" ? " active" : "");
+    chipSem.style.cssText = "background:var(--surface-2);color:var(--muted);border-color:var(--line)";
+    chipSem.innerHTML = `Sem obra <span class="qtd">${semObra}</span>`;
+    chipSem.onclick = () => { filtroObraConf = ""; renderConfLista(); };
+    row.appendChild(chipSem);
+  }
+}
+
+function renderConfLista(){
+  const cont = document.getElementById("conf-lista");
+  const empty = document.getElementById("conf-empty-state");
+  cont.innerHTML = "";
+
+  // funcionario Inativo sem lancamento real nesse mes nao aparece pra
+  // conferencia -- quem saiu da equipe nao deve virar "pendente" do nada
+  // nem ficar disponivel pra receber lancamento novo. Mas achado da
+  // analise: quem TRABALHOU de verdade no mes e depois saiu continuava
+  // desaparecendo mesmo tendo dias reais pra conferir -- agora esses
+  // continuam aparecendo (so leitura/conferencia, o Apontador jah nao
+  // lista Inativo pra lancar de novo).
+  const ativosFuncs = todos.filter(f => f.status !== "Inativo" || temLancamentoReal(dadosMes[f.id]));
+
+  renderConfObraFiltro(ativosFuncs);
+
+  // Filtro por obra (chips) -- por obra padrão do cadastro, mesmo critério
+  // da Lista de Funcionários. Afeta a lista E os cards de resumo (útil pra
+  // conferir "quantos de CRECHE ainda faltam"). A busca por texto é
+  // aplicada só na lista, por cima disso.
+  const naObra = filtroObraConf === "todas"
+    ? ativosFuncs
+    : ativosFuncs.filter(f => filtroObraConf === "" ? !f.obraPadrao : (f.obraPadrao || "") === filtroObraConf);
+
+  let conferidos = 0;
+  naObra.forEach(f => { if(statusMesConferido(dadosMes[f.id] || {})) conferidos++; });
+  document.getElementById("conf-stat-total").textContent = naObra.length;
+  document.getElementById("conf-stat-conferidos").textContent = conferidos;
+  document.getElementById("conf-stat-pendentes").textContent = naObra.length - conferidos;
+
+  const termo = filtroConf.trim().toLowerCase();
+  const visiveis = naObra.filter(f => !termo || (f.nome||"").toLowerCase().includes(termo) || (f.funcao||"").toLowerCase().includes(termo));
+  empty.hidden = visiveis.length > 0;
+
+  visiveis.forEach(f => {
+    const info = dadosMes[f.id] || { dias: {}, statusConferencia: {} };
+    const row = document.createElement("div");
+    row.className = "conf-row";
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.style.background = corAvatar(f.nome || "?");
+    avatar.textContent = iniciais(f.nome || "?");
+
+    const bloco = document.createElement("div");
+    const nome = document.createElement("div");
+    nome.className = "emp-name";
+    nome.textContent = f.nome;
+    const funcao = document.createElement("div");
+    funcao.className = "emp-sub";
+    funcao.textContent = f.funcao || "—";
+    bloco.appendChild(nome);
+    bloco.appendChild(funcao);
+
+    const qtdDivergencias = divergenciasAbertasPorFunc[f.id] || 0;
+    if(qtdDivergencias > 0){
+      const badge = document.createElement("div");
+      badge.className = "divergencia-badge";
+      badge.textContent = "⚠ " + qtdDivergencias + (qtdDivergencias === 1 ? " divergência" : " divergências");
+      bloco.appendChild(badge);
+    }
+
+    row.appendChild(avatar);
+    row.appendChild(bloco);
+
+    // Uma coluna por quinzena -- status Conferido/Pendente daquela quinzena
+    // (alterna sem precisar abrir o cartão) + um "Abrir Cartão" que já abre
+    // direto naquela quinzena selecionada
+    [1, 2].forEach(q => {
+      const col = document.createElement("div");
+      col.className = "conf-quinzena-col";
+
+      const st = statusQuinzena(info, q);
+      const pill = document.createElement("button");
+      pill.className = "pill " + (st === "Conferido" ? "pill-conferido" : "pill-pendente");
+      pill.innerHTML = `<span class="q-lbl">${q}ªQ</span> ${st === "Conferido" ? "Conferido" : "Pendente"}`;
+      pill.title = q === 1 ? "1ª quinzena (01–15)" : "2ª quinzena (16–fim do mês)";
+      pill.onclick = () => alternarConferencia(f, q);
+
+      const abrirBtn = document.createElement("button");
+      abrirBtn.className = "btn";
+      abrirBtn.textContent = "Abrir Cartão";
+      abrirBtn.onclick = () => abrirFicha(f, q);
+
+      col.appendChild(pill);
+      col.appendChild(abrirBtn);
+      row.appendChild(col);
+    });
+
+    cont.appendChild(row);
+  });
+}
+
+document.getElementById("conf-busca").addEventListener("input", (e) => {
+  filtroConf = e.target.value;
+  renderConfLista();
+});
+
+async function garantirDocPontos(funcId, mes){
+  const ref = db.doc("funcionarios/" + funcId + "/pontos/" + mes);
+  const snap = await ref.get();
+  if(snap.exists) return ref;
+  const { diasNoMes } = infoMes(mes);
+  const [anoNum, mesNum] = mes.split("-").map(Number);
+  const dias = {};
+  for(let dia = 1; dia <= diasNoMes; dia++){
+    const wd = new Date(anoNum, mesNum - 1, dia).getDay(); // 0=domingo,6=sabado
+    if(wd === 0) dias[dia] = { m: "DOMINGO", t: "DOMINGO" };
+    else if(wd === 6) dias[dia] = { m: "SÁBADO", t: "SÁBADO" };
+  }
+  await ref.set({ dias, statusConferencia: { q1: "Pendente", q2: "Pendente" } });
+  return ref;
+}
+
+// quinzena: 1 ou 2 -- so alterna o status daquela quinzena, mantendo a outra
+// como estava (grava o objeto {q1,q2} inteiro de uma vez so, nunca um
+// dot-path em cima de statusConferencia, ja que um doc antigo pode ter esse
+// campo como string solta e o update() nao faz merge profundo mesmo assim).
+async function alternarConferencia(f, quinzena){
+  const info = dadosMes[f.id] || { dias: {}, statusConferencia: {} };
+  const atual = statusQuinzena(info, quinzena);
+  const novo = atual === "Conferido" ? "Pendente" : "Conferido";
+  const statusFinal = {
+    q1: quinzena === 1 ? novo : statusQuinzena(info, 1),
+    q2: quinzena === 2 ? novo : statusQuinzena(info, 2),
+  };
+  try {
+    const ref = await garantirDocPontos(f.id, mesConferencia);
+    await ref.update({ statusConferencia: statusFinal });
+    const snap = await ref.get();
+    dadosMes[f.id] = snap.data();
+    renderConfLista();
+  } catch(e){
+    toast("Não deu pra salvar agora — tenta de novo.");
+  }
+}
+
+let fichaFunc = null;
+function opcoesObra(valorAtual){
+  const opts = ['<option value=""></option>']
+    .concat(OBRAS.map(o => `<option value="${o}"${valorAtual===o?" selected":""}>${o}</option>`))
+    .concat(MARCADORES.map(o => `<option value="${o}"${valorAtual===o?" selected":""}>${o}</option>`));
+  if(valorAtual && !OBRAS.includes(valorAtual) && !MARCADORES.includes(valorAtual)){
+    opts.push(`<option value="${valorAtual}" selected>${valorAtual}</option>`);
+  }
+  return opts.join("");
+}
+
+// Colore o select da tabela de dias igual o chip do resumo por obra (mesma
+// funcao corAvatar) quando o valor e uma obra de verdade -- marcador
+// (SÁBADO/DOMINGO/FERIADO/FALTA) e vazio continuam com o estilo padrao
+// (classe .marcado ou nenhum), pedido do Rubens pra bater visualmente com
+// o resumo logo acima da tabela.
+function aplicarCorObraSelect(sel, valor){
+  if(valor && !ehMarcador(valor)){
+    const cor = corAvatar(valor);
+    sel.style.background = cor + "1a";
+    sel.style.borderColor = cor + "55";
+    sel.style.color = cor;
+  } else {
+    sel.style.background = "";
+    sel.style.borderColor = "";
+    sel.style.color = "";
+  }
+}
+
+// quinzena (1 ou 2) que o cartao esta mostrando no momento -- filtra quais
+// dias aparecem na tabela e qual quinzena o pill de status do cabecalho
+// reflete/alterna. Nao tem mais um toggle dentro do cartao pra mudar isso
+// (foi removido) -- quem decide e o botao "Abrir Cartao" clicado na lista
+// da Conferencia de Ponto (coluna 1aQ ou 2aQ), via abrirFicha(f, quinzena).
+let fichaQuinzena = 1;
+
+// quinzenaAlvo (opcional): abre o cartão já filtrado pra essa quinzena (1
+// ou 2) -- usado pelos botões "Abrir Cartão" de cada coluna de quinzena na
+// lista (o botão da 1ªQ passa 1, o da 2ªQ passa 2). Sem esse parâmetro,
+// mantém o comportamento padrão (sempre 1ª quinzena numa abertura nova, ou
+// a quinzena que já estava selecionada se o cartão já estava aberto).
+async function abrirFicha(f, quinzenaAlvo){
+  const jaAberta = !document.getElementById("pagina-ficha").hidden;
+  fichaFunc = f;
+  if(quinzenaAlvo === 1 || quinzenaAlvo === 2) fichaQuinzena = quinzenaAlvo;
+  else if(!jaAberta) fichaQuinzena = 1; // toda abertura nova comeca na 1a quinzena
+
+  const { label, periodo } = infoMes(mesConferencia);
+
+  document.getElementById("ficha-nome").textContent = f.nome;
+  document.getElementById("ficha-funcao").textContent = f.funcao || "—";
+  document.getElementById("ficha-pix").textContent = "PIX: " + (f.pix || "—");
+  document.getElementById("ficha-periodo").textContent = label + " · " + periodo;
+
+  renderFichaConteudo();
+
+  document.getElementById("appConteudo").style.display = "none";
+  document.getElementById("pagina-ficha").hidden = false;
+  window.scrollTo(0, 0);
+}
+
+// Redesenha so a tabela + resumo, sem buscar dado de novo -- usado na
+// abertura e depois de salvar um dia. Não tem mais toggle dentro do cartão
+// pra trocar de quinzena (isso mora só na lista da Conferência de Ponto,
+// nos dois botões "Abrir Cartão") -- mas a tabela continua filtrada pela
+// quinzena escolhida ao abrir (fichaQuinzena, setado por abrirFicha()
+// conforme qual botão da lista foi clicado).
+function renderFichaConteudo(){
+  if(!fichaFunc) return;
+  const info = dadosMes[fichaFunc.id] || { dias: {}, statusConferencia: {} };
+  const { diasNoMes } = infoMes(mesConferencia);
+  const [anoNum, mesNum] = mesConferencia.split("-").map(Number);
+
+  const statusBtn = document.getElementById("ficha-status");
+  const statusAtual = statusQuinzena(info, fichaQuinzena);
+  const rotuloQuinzena = fichaQuinzena === 1 ? "1ª quinzena" : "2ª quinzena";
+  statusBtn.className = "pill " + (statusAtual === "Conferido" ? "pill-conferido" : "pill-pendente");
+  statusBtn.textContent = rotuloQuinzena + ": " + (statusAtual === "Conferido" ? "Conferido" : "Pendente");
+  statusBtn.onclick = () => alternarConferencia(fichaFunc, fichaQuinzena).then(() => { renderFichaConteudo(); });
+
+  const diaInicio = fichaQuinzena === 1 ? 1 : 16;
+  const diaFim = fichaQuinzena === 1 ? 15 : diasNoMes;
+
+  const tbody = document.getElementById("ficha-body");
+  tbody.innerHTML = "";
+  const porObra = {};
+  let totalHorasExtras = 0;
+  for(let dia = diaInicio; dia <= diaFim; dia++){
+    let diaObj = (info.dias || {})[dia];
+    if(!diaObj){
+      // dia ainda nao gravado no banco: mostra o fim de semana ja marcado
+      // (so vira gravacao de verdade quando o usuario editar algo nesse mes)
+      const wd = new Date(anoNum, mesNum - 1, dia).getDay(); // 0=domingo, 6=sabado
+      if(wd === 0) diaObj = { m: "DOMINGO", t: "DOMINGO" };
+      else if(wd === 6) diaObj = { m: "SÁBADO", t: "SÁBADO" };
+      else diaObj = {};
+    }
+    const tr = document.createElement("tr");
+
+    const tdDia = document.createElement("td");
+    tdDia.className = "dia-col";
+    tdDia.textContent = String(dia).padStart(2, "0");
+
+    const tdM = document.createElement("td");
+    const selM = document.createElement("select");
+    selM.className = "obra-select" + (ehMarcador(diaObj.m) ? " marcado" : "");
+    selM.innerHTML = opcoesObra(diaObj.m || "");
+    aplicarCorObraSelect(selM, diaObj.m);
+    selM.onchange = () => salvarDia(dia, "m", selM.value);
+    tdM.appendChild(selM);
+
+    const tdT = document.createElement("td");
+    const selT = document.createElement("select");
+    selT.className = "obra-select" + (ehMarcador(diaObj.t) ? " marcado" : "");
+    selT.innerHTML = opcoesObra(diaObj.t || "");
+    aplicarCorObraSelect(selT, diaObj.t);
+    selT.onchange = () => salvarDia(dia, "t", selT.value);
+    tdT.appendChild(selT);
+
+    const tdQtd = document.createElement("td");
+    tdQtd.className = "qtd-col";
+    const qtd = ((diaObj.m && !ehMarcador(diaObj.m) ? 1 : 0) + (diaObj.t && !ehMarcador(diaObj.t) ? 1 : 0)) * 0.5;
+    tdQtd.textContent = qtd > 0 ? qtd.toFixed(1) : "–";
+
+    if(diaObj.m && !ehMarcador(diaObj.m)) porObra[diaObj.m] = (porObra[diaObj.m] || 0) + 0.5;
+    if(diaObj.t && !ehMarcador(diaObj.t)) porObra[diaObj.t] = (porObra[diaObj.t] || 0) + 0.5;
+
+    // Horas extras -- digitadas à mão (pedido do Rubens, 11/09/2026); o
+    // sistema não tem horário de entrada/saída, só manhã/tarde, então não
+    // tem como calcular sozinho. Guardado em dias.{dia}.horasExtras, junto
+    // com m/t no mesmo doc -- salvarDia() já é genérico o bastante (não
+    // precisou mudar).
+    const tdHoras = document.createElement("td");
+    tdHoras.className = "horas-col";
+    const inputHoras = document.createElement("input");
+    inputHoras.type = "number";
+    inputHoras.min = "0";
+    inputHoras.step = "0.5";
+    inputHoras.className = "horas-input";
+    inputHoras.value = diaObj.horasExtras ? diaObj.horasExtras : "";
+    inputHoras.placeholder = "–";
+    inputHoras.onchange = () => salvarDia(dia, "horasExtras", Number(inputHoras.value) || 0);
+    tdHoras.appendChild(inputHoras);
+    totalHorasExtras += Number(diaObj.horasExtras) || 0;
+
+    tr.appendChild(tdDia);
+    tr.appendChild(tdM);
+    tr.appendChild(tdT);
+    tr.appendChild(tdQtd);
+    tr.appendChild(tdHoras);
+    tbody.appendChild(tr);
+  }
+  renderResumoFicha(porObra, totalHorasExtras);
+  carregarDivergenciasFicha();
+}
+
+// Divergencias informadas pelo funcionario (via cartoes.html) pra esse
+// funcionario/mes -- mostra TODAS (das duas quinzenas juntas, pra nao
+// sumir uma divergencia da 1a quinzena quando o admin ta olhando a 2a).
+// Cada uma aberta ganha um formulario de resposta + opcao de corrigir o
+// dia/periodo direto, reusando salvarDia() (mesma trava e invalidacao de
+// conferencia/concordancia que qualquer outra edicao de dia).
+async function carregarDivergenciasFicha(){
+  const wrap = document.getElementById("ficha-divergencias-wrap");
+  const lista = document.getElementById("ficha-divergencias-lista");
+  if(!fichaFunc) { wrap.hidden = true; return; }
+  let itens = [];
+  try {
+    const snap = await db.collection("funcionarios/" + fichaFunc.id + "/divergencias")
+      .where("mes", "==", mesConferencia).get();
+    itens = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.dia || 0) - (a.dia || 0));
+  } catch(e){
+    itens = [];
+  }
+  wrap.hidden = itens.length === 0;
+  if(itens.length === 0) return;
+
+  const mesLabel = mesConferencia.split("-")[1];
+  lista.innerHTML = itens.map(t => {
+    const aberta = t.status === "Aberta";
+    return `
+      <div class="divergencia-item" data-div-id="${t.id}">
+        <div class="cabecalho">
+          <b>Dia ${String(t.dia).padStart(2, "0")}/${mesLabel} · ${t.periodo === "m" ? "Manhã" : "Tarde"}</b>
+          <span class="pill ${aberta ? "pill-pendente" : "pill-conferido"}" style="margin:0">${escapeHtml(t.status)}</span>
+        </div>
+        <div><b>${escapeHtml(t.tipo)}</b>${t.obraInformada ? " · " + escapeHtml(t.obraInformada) : ""}</div>
+        <div style="margin-top:4px">${escapeHtml(t.texto)}</div>
+        ${t.resposta ? `<div class="resposta"><b>Sua resposta</b><br>${escapeHtml(t.resposta)}</div>` : ""}
+        ${aberta ? `
+          <div class="resposta-form">
+            <div class="field" style="margin-bottom:8px">
+              <textarea class="div-resposta" rows="2" placeholder="Resposta pro funcionário (opcional)"></textarea>
+            </div>
+            <label class="div-corrigir-label">
+              <input type="checkbox" class="div-corrigir-check"> Corrigir o lançamento desse dia/período
+            </label>
+            <div class="field div-corrigir-select-field" style="margin-bottom:8px" hidden>
+              <select class="div-corrigir-select"></select>
+            </div>
+            <button type="button" class="btn btn-primary div-btn-resolver">Marcar como resolvida</button>
+          </div>
+        ` : ""}
+      </div>
+    `;
+  }).join("");
+
+  itens.filter(t => t.status === "Aberta").forEach(t => {
+    const item = lista.querySelector(`[data-div-id="${t.id}"]`);
+    if(!item) return;
+    const check = item.querySelector(".div-corrigir-check");
+    const selectField = item.querySelector(".div-corrigir-select-field");
+    const select = item.querySelector(".div-corrigir-select");
+    const diaObj = ((dadosMes[fichaFunc.id] || {}).dias || {})[t.dia] || {};
+    select.innerHTML = opcoesObra(diaObj[t.periodo] || "");
+    check.onchange = () => { selectField.hidden = !check.checked; };
+    item.querySelector(".div-btn-resolver").onclick = () => {
+      resolverDivergencia(t, item.querySelector(".div-resposta").value, check.checked ? select.value : null);
+    };
+  });
+}
+
+// corrigido: null = so responde/resolve sem mexer no lancamento; qualquer
+// outro valor (incluindo "") = tambem grava esse valor em dias.{dia}.{periodo}
+// via salvarDia(), o mesmo caminho usado pelos selects da tabela (mesma
+// trava de conferencia/concordancia).
+async function resolverDivergencia(div, resposta, corrigido){
+  const msg = corrigido !== null
+    ? `Marcar como resolvida e corrigir o dia ${String(div.dia).padStart(2, "0")} (${div.periodo === "m" ? "manhã" : "tarde"}) para "${corrigido || "vazio"}"?`
+    : "Marcar essa divergência como resolvida?";
+  const ok = await confirmarAcao(msg, "Confirmar", "primary");
+  if(!ok) return;
+  try {
+    if(corrigido !== null){
+      await salvarDia(div.dia, div.periodo, corrigido);
+    }
+    await db.doc("funcionarios/" + fichaFunc.id + "/divergencias/" + div.id).update({
+      status: "Resolvida",
+      resposta: resposta || "",
+      resolvidoEm: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    toast("Divergência marcada como resolvida.");
+    carregarContagemDivergencias();
+    carregarDivergenciasFicha();
+  } catch(e){
+    toast("Não deu pra salvar agora — tenta de novo.");
+  }
+}
+
+function renderResumoFicha(porObra, totalHorasExtras){
+  const nomes = Array.from(new Set([...OBRAS, ...Object.keys(porObra)]));
+  const chips = document.getElementById("ficha-resumo-chips");
+  chips.innerHTML = nomes.map(nome => {
+    const cor = corAvatar(nome);
+    const qtd = porObra[nome] || 0;
+    return `<div class="ficha-resumo-chip" style="background:${cor}1a;border-color:${cor}55;color:${cor}">`
+      + `<span>${escapeHtml(nome)}</span><span class="qtd">${qtd > 0 ? qtd.toFixed(1) : "–"}</span></div>`;
+  }).join("");
+  const total = Object.values(porObra).reduce((soma, v) => soma + v, 0);
+  document.getElementById("ficha-resumo-total").textContent = total.toFixed(1);
+  document.getElementById("ficha-resumo-horas").textContent = (totalHorasExtras || 0).toString().replace(".", ",");
+}
+
+// FALTA virou independente por período (pedido do Rubens, 08/09/2026,
+// revendo a decisão de "Modelo A" de 04/09) -- pode faltar só de manhã ou
+// só de tarde, com o outro período podendo ter uma obra real lançada no
+// mesmo dia. Mesmo tratamento que os outros marcadores (SÁBADO/DOMINGO/
+// FERIADO), que já eram gravados por período independente -- por isso a
+// escrita agora é só um campo por vez, sem forçar o outro período.
+async function salvarDia(dia, campo, valor){
+  if(!fichaFunc) return;
+  try {
+    const ref = await garantirDocPontos(fichaFunc.id, mesConferencia);
+    const infoAntes = dadosMes[fichaFunc.id] || {};
+    const atualizacao = { ["dias." + dia + "." + campo]: valor };
+    atualizacao.statusConferencia = invalidarConferenciaPatch(infoAntes, dia);
+    atualizacao.concordanciaFuncionario = invalidarConcordanciaPatch(infoAntes, dia);
+
+    await ref.update(atualizacao);
+    const snap = await ref.get();
+    dadosMes[fichaFunc.id] = snap.data();
+    abrirFicha(fichaFunc);
+    renderConfLista();
+
+    // Cache de conveniencia pro Apontador sugerir a "equipe provavel" de
+    // cada obra (Passo 4 do roadmap) -- so grava quando o lancamento e uma
+    // obra real (nao marcador, nao FALTA, nao vazio). Nunca e lido como
+    // fonte de verdade em lugar nenhum, so ordena/agrupa visualmente; se
+    // falhar, nao deve travar o salvamento do dia (por isso o catch mudo).
+    // Achado da análise: corrigir um dia retroativo reescrevia esse cache
+    // com a data sendo editada, empurrando "última obra" pra trás no tempo
+    // -- só anda pra frente (ou grava quando ainda não existe cache).
+    if(valor && !ehMarcador(valor)){
+      const dataLancamento = mesConferencia + "-" + String(dia).padStart(2, "0");
+      if(!fichaFunc.ultimaObraData || dataLancamento >= fichaFunc.ultimaObraData){
+        fichaFunc.ultimaObraId = valor;
+        fichaFunc.ultimaObraNome = valor;
+        fichaFunc.ultimaObraData = dataLancamento;
+        db.doc("funcionarios/" + fichaFunc.id).update({
+          ultimaObraId: valor,
+          ultimaObraNome: valor,
+          ultimaObraData: dataLancamento
+        }).catch(() => {});
+      }
+    }
+  } catch(e){
+    toast("Não deu pra salvar esse dia — tenta de novo.");
+  }
+}
+
+// Volta pra lista (Conferência de Ponto) -- pagina cheia, nao modal, entao
+// so precisa esconder #pagina-ficha e mostrar #appConteudo de novo.
+function fecharFicha(){
+  document.getElementById("pagina-ficha").hidden = true;
+  document.getElementById("appConteudo").style.display = "block";
+  fichaFunc = null;
+}
+document.getElementById("btn-fechar-ficha").onclick = fecharFicha;
+
+// iniciar() agora é chamada pelo onAuthStateChanged() lá em cima, só
+// depois de confirmar login com role "admin" (não mais direto aqui).
+</script>
+</body>
+</html>

@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<script src="campolina-config.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartões — Equipe Campolina</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root{
+    --bg: #f2f4f9;
+    --surface: #ffffff;
+    --surface-2: #f8f9fc;
+    --ink: #151b2c;
+    --muted: #626e88;
+    --line: #e2e6f0;
+    --accent: #2451d6;
+    --accent-ink: #ffffff;
+    --hero-1: #0b1330;
+    --hero-2: #1c3fb8;
+    --good-bg: #dcf3e6;
+    --good-ink: #157a4a;
+    --warn-bg: #fbe6d4;
+    --warn-ink: #a85417;
+    --danger-ink: #b3261e;
+    --shadow: 0 1px 2px rgba(20,26,50,.04), 0 8px 24px rgba(20,26,50,.06);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #0d1220;
+      --surface: #151c30;
+      --surface-2: #1a2238;
+      --ink: #eef1fb;
+      --muted: #94a1c4;
+      --line: #262f4a;
+      --accent: #6d8bff;
+      --accent-ink: #0b1330;
+      --hero-1: #070b1a;
+      --hero-2: #1a2f8c;
+      --good-bg: #113224;
+      --good-ink: #6fe0a6;
+      --warn-bg: #3a2410;
+      --warn-ink: #f0a862;
+      --danger-ink: #ff8f87;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #0d1220;
+    --surface: #151c30;
+    --surface-2: #1a2238;
+    --ink: #eef1fb;
+    --muted: #94a1c4;
+    --line: #262f4a;
+    --accent: #6d8bff;
+    --accent-ink: #0b1330;
+    --hero-1: #070b1a;
+    --hero-2: #1a2f8c;
+    --good-bg: #113224;
+    --good-ink: #6fe0a6;
+    --warn-bg: #3a2410;
+    --warn-ink: #f0a862;
+    --danger-ink: #ff8f87;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3{ margin: 0; font-family: "Archivo", "IBM Plex Sans", sans-serif; }
+
+  .page{ max-width: 720px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  .hero{
+    background: linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 130%);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    color: #f5f7ff;
+    box-shadow: var(--shadow);
+  }
+  .hero-eyebrow{
+    font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+    color: #a9bdfb; margin-bottom: 8px;
+  }
+  .hero h1{ font-size: 22px; font-weight: 800; color: #fff; }
+  .hero-sub{ font-size: 13px; color: #cbd5f7; margin-top: 6px; }
+
+  .aviso{
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .search-wrap{
+    position: relative;
+    margin-top: 18px;
+  }
+  .search-wrap svg{ position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+  .search-wrap input{
+    width: 100%;
+    padding: 11px 14px 11px 38px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 13.5px;
+  }
+  .search-wrap input:focus{ outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .list-wrap{
+    margin-top: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .func-row{
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .func-row:last-child{ border-bottom: none; }
+  .func-quinzena-col{ display: flex; flex-direction: column; align-items: stretch; gap: 5px; min-width: 108px; }
+  .func-quinzena-col .btn{ font-size: 11.5px; padding: 6px 10px; justify-content: center; text-align: center; }
+  .q-status-pill{
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .02em;
+  }
+  .q-status-pill .q-lbl{ font-size: 9px; font-weight: 800; opacity: .7; }
+  .avatar{
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12.5px; color: #fff;
+    flex-shrink: 0;
+  }
+  .emp-name{ font-weight: 600; font-size: 14px; }
+  .emp-sub{ font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .btn{
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    border-radius: 9px;
+    padding: 9px 13px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:hover{ border-color: var(--accent); }
+
+  .estado{ padding: 60px 20px; text-align: center; color: var(--muted); font-size: 13.5px; }
+
+  .overlay{
+    position: fixed; inset: 0;
+    background: rgba(10,14,28,.5);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 20;
+  }
+  .modal{
+    background: var(--surface);
+    border-radius: var(--radius);
+    width: 100%; max-width: 480px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+  .modal h2{ font-size: 17px; }
+  .modal-sub{ font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  .mes-select-wrap{
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 16px;
+  }
+  .mes-select-wrap label{
+    font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 700;
+  }
+  .mes-select-wrap #mes-fixo{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .status-pill{
+    display: inline-block;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    margin-top: 10px;
+    margin-right: 6px;
+  }
+  .pill-conferido{ background: var(--good-bg); color: var(--good-ink); }
+  .pill-pendente{ background: var(--warn-bg); color: var(--warn-ink); }
+
+  .ficha-resumo{
+    margin-top: 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface-2);
+  }
+  .ficha-resumo-titulo{
+    font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .ficha-resumo-chips{ display: flex; flex-wrap: wrap; gap: 6px; }
+  .ficha-resumo-chip{
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ficha-resumo-chip .qtd{ font-weight: 700; }
+  .ficha-resumo-total{
+    display: flex; gap: 10px;
+    margin-top: 10px; padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+  .ficha-resumo-total .quinzena{ flex: 1; text-align: center; }
+  .ficha-resumo-total .lbl{ font-size: 9.5px; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); }
+  .ficha-resumo-total .val{ font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+
+  table.dias{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    font-size: 12.5px;
+  }
+  table.dias th{
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    padding: 7px 6px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  table.dias td{
+    padding: 6px 5px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  table.dias tr:last-child td{ border-bottom: none; }
+  table.dias td.dia-col{ font-weight: 700; color: var(--muted); width: 36px; }
+  table.dias td.marcado{ color: var(--danger-ink); font-weight: 700; }
+  table.dias td.vazio{ color: var(--line); }
+
+  .modal-actions{ display: flex; justify-content: flex-end; margin-top: 18px; }
+
+  .btn-primary{ background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:disabled{ opacity: .5; cursor: default; }
+
+  .secao-concordancia{ margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .concordancia-linha{ display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+  #ficha-overlay label{
+    display: block; font-size: 11px; font-weight: 600; letter-spacing: .03em;
+    text-transform: uppercase; color: var(--muted); margin: 14px 0 6px;
+  }
+  #ficha-overlay select, #ficha-overlay textarea{
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px;
+    background: var(--surface); color: var(--ink); font: inherit; font-size: 14px;
+  }
+  #ficha-overlay textarea{ min-height: 80px; resize: vertical; }
+  #ficha-overlay select:focus, #ficha-overlay textarea:focus{ outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .divergencia-item{
+    margin-top: 12px; padding: 12px 14px; border: 1px solid var(--line);
+    border-radius: 10px; background: var(--surface-2); font-size: 13px;
+  }
+  .divergencia-item .cabecalho{ display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .divergencia-item .resposta{ margin-top: 8px; padding: 8px 10px; background: var(--surface); border-radius: 8px; font-size: 12.5px; }
+  .pill-resolvida{ background: var(--good-bg); color: var(--good-ink); }
+
+  #toast{
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 9px;
+    font-size: 13px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity .2s ease;
+    max-width: 90vw; text-align: center;
+  }
+  #toast.show{ opacity: 1; }
+
+  [hidden]{ display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="hero">
+    <div class="hero-eyebrow">Equipe Campolina · Conferência</div>
+    <h1>Cartões da equipe</h1>
+    <div class="hero-sub">Busque seu nome e abra seu cartão pra conferir os dias lançados no mês.</div>
+  </div>
+
+  <div class="aviso">Essa página é só de consulta — dá pra ver os dias lançados de qualquer pessoa da equipe, mas não editar nada. Se algum dia estiver errado, fala com o responsável pelo ponto.</div>
+
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="busca" type="text" placeholder="Buscar por nome ou função...">
+  </div>
+
+  <div class="estado" id="estado-carregando">Carregando…</div>
+  <div class="estado" id="estado-vazio" hidden>Nenhum funcionário encontrado.</div>
+  <div class="list-wrap" id="lista" hidden></div>
+</div>
+
+<div class="overlay" id="ficha-overlay" hidden>
+  <div class="modal">
+    <h2 id="ficha-nome">—</h2>
+    <div class="modal-sub" id="ficha-funcao">—</div>
+
+    <div class="mes-select-wrap">
+      <label>Mês</label>
+      <span id="mes-fixo"></span>
+    </div>
+
+    <div id="status-wrap"></div>
+
+    <div class="ficha-resumo">
+      <div class="ficha-resumo-titulo">Resumo de dias por obra</div>
+      <div class="ficha-resumo-chips" id="resumo-chips"></div>
+      <div class="ficha-resumo-total">
+        <div class="quinzena" id="resumo-q1-bloco">
+          <div class="lbl" id="resumo-q1-lbl">1ª quinzena (01–15)</div>
+          <div class="val" id="resumo-q1">0.0</div>
+        </div>
+        <div class="quinzena" id="resumo-q2-bloco">
+          <div class="lbl" id="resumo-q2-lbl">2ª quinzena (16–30)</div>
+          <div class="val" id="resumo-q2">0.0</div>
+        </div>
+        <div class="quinzena">
+          <div class="lbl">Horas extras</div>
+          <div class="val" id="resumo-horas">0</div>
+        </div>
+      </div>
+    </div>
+
+    <table class="dias">
+      <thead>
+        <tr><th>Dia</th><th>Manhã</th><th>Tarde</th><th>H. Extras</th></tr>
+      </thead>
+      <tbody id="dias-body"></tbody>
+    </table>
+
+    <div class="secao-concordancia">
+      <div class="concordancia-linha">
+        <span id="concordancia-pill"></span>
+        <button type="button" class="btn btn-primary" id="btn-concordar">✓ Concordo com meu cartão</button>
+      </div>
+      <button type="button" class="btn" id="btn-abrir-divergencia" style="width:100%;margin-top:8px">⚠ Informar divergência nesta quinzena</button>
+    </div>
+
+    <form id="form-divergencia" hidden>
+      <label>Dia</label>
+      <select id="div-dia"></select>
+      <label>Período</label>
+      <select id="div-periodo">
+        <option value="m">Manhã</option>
+        <option value="t">Tarde</option>
+      </select>
+      <label>O que precisa ser verificado?</label>
+      <select id="div-tipo">
+        <option>Período não registrado</option>
+        <option>Obra incorreta</option>
+        <option>Falta indevida</option>
+        <option>Outro motivo</option>
+      </select>
+      <label>Obra informada (se for o caso)</label>
+      <select id="div-obra"></select>
+      <label>Explique o que aconteceu</label>
+      <textarea id="div-texto" maxlength="1000" required placeholder="Ex.: trabalhei à tarde e o período está vazio."></textarea>
+      <div class="modal-actions" style="justify-content:space-between">
+        <button type="button" class="btn" id="btn-cancelar-divergencia">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btn-enviar-divergencia">Enviar</button>
+      </div>
+    </form>
+
+    <div id="lista-divergencias"></div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn" id="btn-fechar-ficha">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="confirm-overlay" hidden>
+  <div class="modal" style="max-width:380px">
+    <h2 id="confirm-titulo">Confirmar</h2>
+    <div class="modal-sub" id="confirm-texto" style="white-space:pre-line">Tem certeza?</div>
+    <div class="modal-actions" style="justify-content:space-between">
+      <button type="button" class="btn" id="confirm-cancelar">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="confirm-ok">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+// ---------------- Firebase (mesmo projeto do index.html) ----------------
+const firebaseConfig = window.CAMPOLINA_FIREBASE_CONFIG;
+validarConfiguracaoCampolina(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const AVATAR_COLORS = ["#2451d6","#157a4a","#a85417","#7c3aed","#0f766e","#be185d","#4338ca","#b45309"];
+function corAvatar(nome){
+  let h = 0;
+  for(let i = 0; i < nome.length; i++) h = (h * 31 + nome.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function iniciais(nome){
+  const partes = nome.trim().split(/\s+/);
+  const a = partes[0] ? partes[0][0] : "";
+  const b = partes.length > 1 ? partes[partes.length - 1][0] : "";
+  return (a + b).toUpperCase();
+}
+// O banco não tem regras/validação -- nome de obra entra direto em
+// innerHTML no resumo por obra, então precisa ser escapado antes.
+function escapeHtml(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+const NOMES_MESES = ["JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO","DEZEMBRO"];
+const MARCADORES = ["SÁBADO", "DOMINGO", "FERIADO", "FALTA"];
+function ehMarcador(v){ return MARCADORES.includes(v); }
+
+// Mesmo esquema de cor do index.html (colorir por obra igual o chip do
+// resumo) -- aqui e uma celula de texto, nao um select, entao so a cor do
+// texto muda (mesma familia visual do .marcado, que ja e so texto colorido).
+function aplicarCorObraCelula(td, valor){
+  if(valor && !ehMarcador(valor)){
+    td.style.color = corAvatar(valor);
+    td.style.fontWeight = "700";
+  } else {
+    td.style.color = "";
+    td.style.fontWeight = "";
+  }
+}
+
+// Mesma logica do index.html: statusConferencia pode ser string legada ou
+// objeto {q1,q2} desde que o status virou por quinzena la.
+function statusQuinzena(info, quinzena){
+  const sc = (info || {}).statusConferencia;
+  if(sc && typeof sc === "object") return sc["q" + quinzena] === "Conferido" ? "Conferido" : "Pendente";
+  return sc === "Conferido" ? "Conferido" : "Pendente";
+}
+// Conferência pelo funcionário (11/09/2026) -- mesmo shape {q1,q2} do
+// statusConferencia acima, mas quem marca é o próprio funcionário. Fica em
+// concordanciaFuncionario no mesmo doc; index.html/apontador.html já
+// devolvem isso pra "Pendente" sempre que qualquer dia da quinzena muda.
+function concordanciaQuinzena(info, quinzena){
+  const cc = (info || {}).concordanciaFuncionario;
+  return cc && cc["q" + quinzena] === "Concordou" ? "Concordou" : "Pendente";
+}
+
+function mesAtualReal(){
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+}
+function infoMes(mesStr){
+  const [ano, mes] = mesStr.split("-").map(Number);
+  const diasNoMes = new Date(ano, mes, 0).getDate();
+  const nome = NOMES_MESES[mes - 1];
+  const mm = String(mes).padStart(2, "0");
+  const dd = String(diasNoMes).padStart(2, "0");
+  return { nome, ano, diasNoMes, label: nome + " / " + ano, periodo: "01–" + dd + "/" + mm + "/" + ano };
+}
+
+let todos = [];
+let filtro = "";
+
+// Status Conferido/Pendente por quinzena de cada um, so pro mes atual real
+// (o mes que a lista mostra) -- carregado uma vez no load, igual o
+// dadosMes do index.html faz pra Conferencia de Ponto.
+let dadosMesAtual = {};
+async function carregarDadosMesAtual(){
+  const mes = mesAtualReal();
+  const resultados = await Promise.all(todos.map(f =>
+    db.doc("funcionarios/" + f.id + "/pontos/" + mes).get()
+      .then(snap => ({ id: f.id, data: snap.exists ? snap.data() : {} }))
+      .catch(() => ({ id: f.id, data: {} }))
+  ));
+  resultados.forEach(r => { dadosMesAtual[r.id] = r.data; });
+}
+
+let OBRAS = [];
+
+async function iniciar(){
+  try {
+    const [snap, obrasSnap] = await Promise.all([
+      db.collection("funcionarios").orderBy("nome").get(),
+      db.collection("obras").orderBy("nome").get()
+    ]);
+    todos = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(f => f.status !== "Inativo");
+    OBRAS = obrasSnap.docs.map(d => d.data().nome);
+    await carregarDadosMesAtual();
+  } catch(e){
+    document.getElementById("estado-carregando").textContent = "Não deu pra carregar a equipe agora.";
+    return;
+  }
+  document.getElementById("estado-carregando").hidden = true;
+  render();
+}
+
+function render(){
+  const lista = document.getElementById("lista");
+  const vazio = document.getElementById("estado-vazio");
+  const termo = filtro.trim().toLowerCase();
+  const visiveis = todos.filter(f => !termo || (f.nome||"").toLowerCase().includes(termo) || (f.funcao||"").toLowerCase().includes(termo));
+
+  lista.hidden = visiveis.length === 0;
+  vazio.hidden = visiveis.length > 0;
+  lista.innerHTML = "";
+
+  visiveis.forEach(f => {
+    const row = document.createElement("div");
+    row.className = "func-row";
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.style.background = corAvatar(f.nome || "?");
+    avatar.textContent = iniciais(f.nome || "?");
+
+    const info = document.createElement("div");
+    const nome = document.createElement("div");
+    nome.className = "emp-name";
+    nome.textContent = f.nome;
+    const funcao = document.createElement("div");
+    funcao.className = "emp-sub";
+    funcao.textContent = f.funcao || "—";
+    info.appendChild(nome);
+    info.appendChild(funcao);
+
+    row.appendChild(avatar);
+    row.appendChild(info);
+
+    // Uma coluna por quinzena -- mesma logica da Conferencia de Ponto do
+    // admin (index.html): pill de status (aqui so leitura, funcionario nao
+    // aprova o proprio ponto) + "Abrir Cartão" que ja abre direto naquela
+    // quinzena (dia 1-15 ou 16-fim do mes).
+    const infoMesAtual = dadosMesAtual[f.id] || {};
+    [1, 2].forEach(q => {
+      const col = document.createElement("div");
+      col.className = "func-quinzena-col";
+
+      const st = statusQuinzena(infoMesAtual, q);
+      const pill = document.createElement("span");
+      pill.className = "q-status-pill " + (st === "Conferido" ? "pill-conferido" : "pill-pendente");
+      pill.innerHTML = `<span class="q-lbl">${q}ªQ</span> ${st}`;
+      pill.title = q === 1 ? "1ª quinzena (01–15)" : "2ª quinzena (16–fim do mês)";
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn";
+      btn.textContent = "Abrir Cartão";
+      btn.onclick = () => abrirFicha(f, q);
+
+      col.appendChild(pill);
+      col.appendChild(btn);
+      row.appendChild(col);
+    });
+
+    lista.appendChild(row);
+  });
+}
+
+document.getElementById("busca").addEventListener("input", (e) => {
+  filtro = e.target.value;
+  render();
+});
+
+let fichaFunc = null;
+// quinzena que o cartao esta mostrando -- decidida por qual "Abrir Cartão"
+// da lista foi clicado (1ªQ ou 2ªQ), igual o index.html faz na Conferencia
+// de Ponto. Sem toggle dentro do cartao (mesma decisao de la).
+let fichaQuinzena = 1;
+// Guardados por carregarMes() pra uso nos handlers de concordância/
+// divergência, que rodam fora da função (cliques de botão).
+let infoFichaAtual = null;
+let mesFichaAtual = null;
+
+// Modal de confirmacao proprio (mesmo motivo do index.html/apontador.html
+// -- confirm() nativo trava silenciosamente em navegadores embutidos tipo
+// WhatsApp/Instagram, muito comum pra quem abre esse link pelo celular).
+let confirmResolver = null;
+function confirmarAcao(mensagem, textoBotao){
+  document.getElementById("confirm-texto").textContent = mensagem;
+  document.getElementById("confirm-ok").textContent = textoBotao || "Confirmar";
+  document.getElementById("confirm-overlay").hidden = false;
+  return new Promise((resolve) => { confirmResolver = resolve; });
+}
+function fecharConfirmacao(resultado){
+  document.getElementById("confirm-overlay").hidden = true;
+  if(confirmResolver){ confirmResolver(resultado); confirmResolver = null; }
+}
+document.getElementById("confirm-ok").onclick = () => fecharConfirmacao(true);
+document.getElementById("confirm-cancelar").onclick = () => fecharConfirmacao(false);
+document.getElementById("confirm-overlay").addEventListener("click", (e) => {
+  if(e.target.id === "confirm-overlay") fecharConfirmacao(false);
+});
+
+let toastTimer = null;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 3200);
+}
+
+// Mes sempre fixo no mes atual real -- pedido do Rubens, cartao publico do
+// funcionario nao deve deixar trocar de mes (evita confusao/duvida sobre
+// "de qual mes esse cartao e", diferente do admin que precisa navegar
+// entre meses pra conferir historico).
+async function abrirFicha(f, quinzenaAlvo){
+  fichaFunc = f;
+  fichaQuinzena = (quinzenaAlvo === 1 || quinzenaAlvo === 2) ? quinzenaAlvo : 1;
+  document.getElementById("ficha-nome").textContent = f.nome;
+  document.getElementById("ficha-funcao").textContent = f.funcao || "—";
+
+  const atual = mesAtualReal();
+  document.getElementById("mes-fixo").textContent = infoMes(atual).label;
+
+  document.getElementById("ficha-overlay").hidden = false;
+  await carregarMes(atual);
+}
+
+async function carregarMes(mes){
+  if(!fichaFunc) return;
+  const { diasNoMes } = infoMes(mes);
+  const [anoNum, mesNum] = mes.split("-").map(Number);
+
+  let info = { dias: {}, statusConferencia: "Pendente" };
+  try {
+    const snap = await db.doc("funcionarios/" + fichaFunc.id + "/pontos/" + mes).get();
+    if(snap.exists) info = snap.data();
+  } catch(e){ /* sem lancamento nesse mes ainda -- fica no padrao vazio */ }
+
+  // Igual index.html: statusConferencia pode ser string legada (doc antigo,
+  // antes do status virar por quinzena) ou objeto {q1,q2}. statusQuinzena()
+  // faz o fallback pra nao quebrar cartao de quem nunca foi tocado desde
+  // essa migracao.
+  // Cartao inteiro (pill, resumo por obra, total) fica restrito a
+  // fichaQuinzena -- so mostra dados da quinzena que foi aberta, igual a
+  // tabela de dias ja faz. Pedido do Rubens depois de ver o resumo/total
+  // ainda somando o mes inteiro mesmo com a tabela ja filtrada.
+  const statusAtual = statusQuinzena(info, fichaQuinzena);
+  const statusWrap = document.getElementById("status-wrap");
+  statusWrap.innerHTML = `<span class="status-pill ${statusAtual === "Conferido" ? "pill-conferido" : "pill-pendente"}">`
+    + (fichaQuinzena === 1 ? "1ª quinzena: " : "2ª quinzena: ") + statusAtual + "</span>";
+
+  const diaInicio = fichaQuinzena === 1 ? 1 : 16;
+  const diaFim = fichaQuinzena === 1 ? 15 : diasNoMes;
+
+  const tbody = document.getElementById("dias-body");
+  tbody.innerHTML = "";
+  const porObra = {};
+  let totalQuinzena = 0;
+  let totalHorasExtras = 0;
+
+  for(let dia = diaInicio; dia <= diaFim; dia++){
+    let diaObj = (info.dias || {})[dia];
+    if(!diaObj){
+      const wd = new Date(anoNum, mesNum - 1, dia).getDay();
+      if(wd === 0) diaObj = { m: "DOMINGO", t: "DOMINGO" };
+      else if(wd === 6) diaObj = { m: "SÁBADO", t: "SÁBADO" };
+      else diaObj = {};
+    }
+
+    const tr = document.createElement("tr");
+    const tdDia = document.createElement("td");
+    tdDia.className = "dia-col";
+    tdDia.textContent = String(dia).padStart(2, "0");
+
+    const tdM = document.createElement("td");
+    tdM.textContent = diaObj.m || "—";
+    tdM.className = diaObj.m ? (ehMarcador(diaObj.m) ? "marcado" : "") : "vazio";
+    aplicarCorObraCelula(tdM, diaObj.m);
+
+    const tdT = document.createElement("td");
+    tdT.textContent = diaObj.t || "—";
+    tdT.className = diaObj.t ? (ehMarcador(diaObj.t) ? "marcado" : "") : "vazio";
+    aplicarCorObraCelula(tdT, diaObj.t);
+
+    if(diaObj.m && !ehMarcador(diaObj.m)){ porObra[diaObj.m] = (porObra[diaObj.m]||0) + 0.5; totalQuinzena += 0.5; }
+    if(diaObj.t && !ehMarcador(diaObj.t)){ porObra[diaObj.t] = (porObra[diaObj.t]||0) + 0.5; totalQuinzena += 0.5; }
+
+    // Horas extras -- só leitura aqui (quem lança é o admin/apontador),
+    // mesmo campo dias.{dia}.horasExtras do doc compartilhado.
+    const tdHoras = document.createElement("td");
+    tdHoras.className = diaObj.horasExtras ? "" : "vazio";
+    tdHoras.textContent = diaObj.horasExtras ? String(diaObj.horasExtras).replace(".", ",") : "—";
+    totalHorasExtras += Number(diaObj.horasExtras) || 0;
+
+    tr.appendChild(tdDia);
+    tr.appendChild(tdM);
+    tr.appendChild(tdT);
+    tr.appendChild(tdHoras);
+    tbody.appendChild(tr);
+  }
+
+  const chips = document.getElementById("resumo-chips");
+  const nomesObra = Object.keys(porObra).sort((a,b)=>a.localeCompare(b,"pt-BR"));
+  chips.innerHTML = nomesObra.length ? nomesObra.map(nome => {
+    const cor = corAvatar(nome);
+    return `<div class="ficha-resumo-chip" style="background:${cor}1a;border-color:${cor}55;color:${cor}">`
+      + `<span>${escapeHtml(nome)}</span><span class="qtd">${porObra[nome].toFixed(1)}</span></div>`;
+  }).join("") : `<span style="color:var(--muted);font-size:12px">Nenhum dia lançado nessa quinzena.</span>`;
+
+  // Mostra so o bloco de total da quinzena aberta -- o outro fica oculto
+  // (antes os dois apareciam sempre, mesmo com a tabela ja filtrada, o que
+  // confundia).
+  document.getElementById("resumo-q1-bloco").style.display = fichaQuinzena === 1 ? "" : "none";
+  document.getElementById("resumo-q2-bloco").style.display = fichaQuinzena === 2 ? "" : "none";
+  document.getElementById("resumo-q" + fichaQuinzena).textContent = totalQuinzena.toFixed(1);
+  document.getElementById("resumo-q2-lbl").textContent = "2ª quinzena (16–" + String(diasNoMes).padStart(2,"0") + ")";
+  document.getElementById("resumo-horas").textContent = totalHorasExtras.toString().replace(".", ",");
+
+  // Conferência pelo funcionário (11/09/2026) -- guarda o info/mes atual
+  // pra usar depois nos handlers de "Concordo"/"Informar divergência".
+  infoFichaAtual = info;
+  mesFichaAtual = mes;
+
+  const concordanciaAtual = concordanciaQuinzena(info, fichaQuinzena);
+  document.getElementById("concordancia-pill").innerHTML =
+    `<span class="status-pill ${concordanciaAtual === "Concordou" ? "pill-conferido" : "pill-pendente"}">Você: ${concordanciaAtual}</span>`;
+  document.getElementById("btn-concordar").disabled = concordanciaAtual === "Concordou";
+
+  document.getElementById("form-divergencia").hidden = true;
+  document.getElementById("form-divergencia").reset();
+  const selDia = document.getElementById("div-dia");
+  selDia.innerHTML = "";
+  for(let d = diaInicio; d <= diaFim; d++){
+    const op = document.createElement("option");
+    op.value = d;
+    op.textContent = String(d).padStart(2, "0") + "/" + String(mesNum).padStart(2, "0");
+    selDia.appendChild(op);
+  }
+  document.getElementById("div-obra").innerHTML = OBRAS.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join("");
+
+  await carregarDivergencias();
+}
+
+async function carregarDivergencias(){
+  const wrap = document.getElementById("lista-divergencias");
+  if(!fichaFunc){ wrap.innerHTML = ""; return; }
+  try {
+    const snap = await db.collection("funcionarios/" + fichaFunc.id + "/divergencias")
+      .where("mes", "==", mesFichaAtual).get();
+    const itens = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.dia || 0) - (a.dia || 0));
+    wrap.innerHTML = itens.length ? itens.map(t => `
+      <div class="divergencia-item">
+        <div class="cabecalho">
+          <b>Dia ${String(t.dia).padStart(2,"0")}/${mesFichaAtual.split("-")[1]} · ${t.periodo === "m" ? "Manhã" : "Tarde"}</b>
+          <span class="status-pill ${t.status === "Aberta" ? "pill-pendente" : "pill-resolvida"}" style="margin:0">${escapeHtml(t.status)}</span>
+        </div>
+        <div><b>${escapeHtml(t.tipo)}</b>${t.obraInformada ? " · " + escapeHtml(t.obraInformada) : ""}</div>
+        <div style="margin-top:4px">${escapeHtml(t.texto)}</div>
+        ${t.resposta ? `<div class="resposta"><b>Resposta do responsável</b><br>${escapeHtml(t.resposta)}</div>` : ""}
+      </div>
+    `).join("") : "";
+  } catch(e){
+    wrap.innerHTML = "";
+  }
+}
+
+document.getElementById("btn-concordar").addEventListener("click", async () => {
+  if(!fichaFunc) return;
+  const ok = await confirmarAcao("Confirmo que conferi os dias e períodos apresentados nesta quinzena.", "Concordo");
+  if(!ok) return;
+  try {
+    const patchAtual = {
+      q1: concordanciaQuinzena(infoFichaAtual, 1),
+      q2: concordanciaQuinzena(infoFichaAtual, 2),
+    };
+    patchAtual["q" + fichaQuinzena] = "Concordou";
+    // set(..., {merge:true}) em vez de update() -- o doc do mes pode ainda
+    // nao existir se ninguem nunca lancou nada nesse funcionario/mes.
+    await db.doc("funcionarios/" + fichaFunc.id + "/pontos/" + mesFichaAtual)
+      .set({ concordanciaFuncionario: patchAtual }, { merge: true });
+    infoFichaAtual.concordanciaFuncionario = patchAtual;
+    document.getElementById("concordancia-pill").innerHTML =
+      `<span class="status-pill pill-conferido">Você: Concordou</span>`;
+    document.getElementById("btn-concordar").disabled = true;
+    toast("Concordância registrada.");
+  } catch(e){
+    toast("Não deu pra registrar agora — tenta de novo.");
+  }
+});
+
+document.getElementById("btn-abrir-divergencia").addEventListener("click", () => {
+  document.getElementById("form-divergencia").hidden = false;
+  document.getElementById("form-divergencia").scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+document.getElementById("btn-cancelar-divergencia").addEventListener("click", () => {
+  document.getElementById("form-divergencia").hidden = true;
+  document.getElementById("form-divergencia").reset();
+});
+
+document.getElementById("form-divergencia").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if(!fichaFunc) return;
+  const texto = document.getElementById("div-texto").value.trim();
+  if(!texto){ toast("Escreva uma explicação."); return; }
+  const dados = {
+    mes: mesFichaAtual,
+    dia: Number(document.getElementById("div-dia").value),
+    periodo: document.getElementById("div-periodo").value,
+    tipo: document.getElementById("div-tipo").value,
+    obraInformada: document.getElementById("div-obra").value,
+    texto,
+    status: "Aberta",
+    resposta: "",
+    criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  const btn = document.getElementById("btn-enviar-divergencia");
+  btn.disabled = true;
+  try {
+    await db.collection("funcionarios/" + fichaFunc.id + "/divergencias").add(dados);
+    document.getElementById("form-divergencia").hidden = true;
+    document.getElementById("form-divergencia").reset();
+    toast("Divergência enviada. O responsável vai analisar.");
+    await carregarDivergencias();
+  } catch(e){
+    toast("Não deu pra enviar agora — tenta de novo.");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+function fecharFicha(){
+  document.getElementById("ficha-overlay").hidden = true;
+  fichaFunc = null;
+}
+document.getElementById("btn-fechar-ficha").onclick = fecharFicha;
+document.getElementById("ficha-overlay").addEventListener("click", (e) => {
+  if(e.target.id === "ficha-overlay") fecharFicha();
+});
+
+iniciar();
+</script>
+</body>
+</html>
