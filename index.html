@@ -703,7 +703,7 @@
   <div class="login-card" id="telaLogin">
     <div class="field">
       <label for="loginUsuario">Usuário</label>
-      <input id="loginUsuario" type="text" placeholder="ex: admin" autocomplete="username">
+      <input id="loginUsuario" type="text" placeholder="Seu usuário" autocomplete="username">
     </div>
     <div class="field">
       <label for="loginSenha">Senha</label>
@@ -994,6 +994,7 @@ const auth = firebase.auth();
 const DOMINIO_LOGIN = "campolina-login.local";
 function emailDoUsuario(usuario){
   const limpo = usuario.trim().toLowerCase();
+  if(limpo === "rubens") return "rubinho106@gmail.com";
   if(limpo.includes("@")) return limpo;
   return limpo.replace(/\s+/g, "") + "@" + DOMINIO_LOGIN;
 }
